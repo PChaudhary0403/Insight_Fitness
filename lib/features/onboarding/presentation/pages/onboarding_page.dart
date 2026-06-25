@@ -76,7 +76,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -90,7 +90,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: Text(
                     'Skip',
                     style: AppTypography.bodyMedium(
-                      color: AppColors.darkTextSecondary,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ),
@@ -152,7 +152,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         Text(
                           slide.title,
                           style: AppTypography.h1(
-                            color: AppColors.darkTextPrimary,
+                            color: AppColors.textPrimary,
                           ),
                           textAlign: TextAlign.center,
                         )
@@ -166,7 +166,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         Text(
                           slide.subtitle,
                           style: AppTypography.bodyLarge(
-                            color: AppColors.darkTextSecondary,
+                            color: AppColors.textSecondary,
                           ),
                           textAlign: TextAlign.center,
                         )
@@ -186,7 +186,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               count: _slides.length,
               effect: ExpandingDotsEffect(
                 activeDotColor: AppColors.primary,
-                dotColor: AppColors.darkSurfaceElevated,
+                dotColor: AppColors.surfaceElevated,
                 dotHeight: 8,
                 dotWidth: 8,
                 expansionFactor: 3,

@@ -87,16 +87,16 @@ class _AssessmentStepOptionalState extends State<AssessmentStepOptional> {
                     margin: EdgeInsets.only(right: e.key != 'endomorph' ? 8 : 0),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: selected ? AppColors.secondary.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+                      color: selected ? AppColors.secondary.withValues(alpha: 0.15) : AppColors.surfaceElevated,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: selected ? AppColors.secondary : AppColors.darkDivider),
+                      border: Border.all(color: selected ? AppColors.secondary : AppColors.dividerColor),
                     ),
                     child: Column(
                       children: [
                         Text(e.value.$1, style: const TextStyle(fontSize: 28)),
                         const SizedBox(height: 4),
-                        Text(e.value.$2, style: AppTypography.bodySmall(color: selected ? AppColors.secondary : AppColors.darkTextPrimary)),
-                        Text(e.value.$3, style: AppTypography.caption(color: AppColors.darkTextTertiary)),
+                        Text(e.value.$2, style: AppTypography.bodySmall(color: selected ? AppColors.secondary : AppColors.textPrimary)),
+                        Text(e.value.$3, style: AppTypography.caption(color: AppColors.textTertiary)),
                       ],
                     ),
                   ),
@@ -143,12 +143,12 @@ class _AssessmentStepOptionalState extends State<AssessmentStepOptional> {
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: selected ? AppColors.error.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+                    color: selected ? AppColors.error.withValues(alpha: 0.15) : AppColors.surfaceElevated,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: selected ? AppColors.error : AppColors.darkDivider),
+                    border: Border.all(color: selected ? AppColors.error : AppColors.dividerColor),
                   ),
                   child: Text(c, style: AppTypography.bodySmall(
-                    color: selected ? AppColors.error : AppColors.darkTextSecondary,
+                    color: selected ? AppColors.error : AppColors.textSecondary,
                   )),
                 ),
               );
@@ -161,7 +161,7 @@ class _AssessmentStepOptionalState extends State<AssessmentStepOptional> {
     );
   }
 
-  Widget _label(String t) => Text(t, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary));
+  Widget _label(String t) => Text(t, style: AppTypography.bodyMedium(color: AppColors.textPrimary));
 
   Widget _chip(String value, String label, String? current, ValueChanged<String?> onTap) {
     final selected = current == value;
@@ -171,12 +171,12 @@ class _AssessmentStepOptionalState extends State<AssessmentStepOptional> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? AppColors.warning.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+          color: selected ? AppColors.warning.withValues(alpha: 0.15) : AppColors.surfaceElevated,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: selected ? AppColors.warning : AppColors.darkDivider),
+          border: Border.all(color: selected ? AppColors.warning : AppColors.dividerColor),
         ),
         child: Text(label, style: AppTypography.bodySmall(
-          color: selected ? AppColors.warning : AppColors.darkTextSecondary,
+          color: selected ? AppColors.warning : AppColors.textSecondary,
         )),
       ),
     );

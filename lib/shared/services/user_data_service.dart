@@ -16,6 +16,10 @@ class UserDataService {
   static const _streakKey = 'current_streak';
   static const _bestStreakKey = 'best_streak';
   static const _lastActiveKey = 'last_active_date';
+  static const _quickWorkoutsKey = 'daily_quick_workouts';
+  static const _weeklyQuickWorkoutsKey = 'weekly_quick_workouts';
+  static const _quickCaloriesKey = 'daily_quick_calories';
+  static const _exerciseLogKey = 'daily_exercise_log';
 
   HealthProfile? _profile;
   HealthProfile? get profile => _profile;
@@ -28,6 +32,9 @@ class UserDataService {
   int _dailyExerciseMin = 0;
   int _currentStreak = 0;
   int _bestStreak = 0;
+  int _dailyQuickWorkouts = 0;
+  int _weeklyQuickWorkouts = 0;
+  int _dailyQuickCalories = 0;
 
   double get dailyWaterL => _dailyWaterL;
   int get dailyMeals => _dailyMeals;
@@ -35,6 +42,17 @@ class UserDataService {
   int get dailyExerciseMin => _dailyExerciseMin;
   int get currentStreak => _currentStreak;
   int get bestStreak => _bestStreak;
+  int get dailyQuickWorkouts => _dailyQuickWorkouts;
+  int get weeklyQuickWorkouts => _weeklyQuickWorkouts;
+  int get dailyQuickCalories => _dailyQuickCalories;
+
+  // ─── Exercise log (sets & reps based) ───────────────────
+  List<Map<String, dynamic>> _exerciseLog = [];
+  List<Map<String, dynamic>> get exerciseLog => List.unmodifiable(_exerciseLog);
+  int get dailyExerciseCount => _exerciseLog.length;
+  int get dailyTotalSets => _exerciseLog.fold(0, (s, e) => s + ((e['sets'] as int?) ?? 0));
+  int get dailyTotalReps => _exerciseLog.fold(0, (s, e) => s + (((e['sets'] as int?) ?? 0) * ((e['reps'] as int?) ?? 0)));
+  int get dailyCaloriesBurned => _exerciseLog.fold(0, (s, e) => s + ((e['calories'] as int?) ?? 0));
 
   /// User's name from the health profile.
   String get userName => _profile?.fullName ?? 'User';
@@ -93,11 +111,17 @@ class UserDataService {
       _dailyMeals = 0;
       _dailySteps = 0;
       _dailyExerciseMin = 0;
+      _dailyQuickWorkouts = 0;
+      _dailyQuickCalories = 0;
+      _exerciseLog = [];
       await prefs.setString(_lastActiveKey, today);
       await prefs.setDouble(_dailyWaterKey, 0);
       await prefs.setInt(_dailyMealsKey, 0);
       await prefs.setInt(_dailyStepsKey, 0);
       await prefs.setInt(_dailyExerciseMinKey, 0);
+      await prefs.setInt(_quickWorkoutsKey, 0);
+      await prefs.setInt(_quickCaloriesKey, 0);
+      await prefs.setString(_exerciseLogKey, '[]');
       await prefs.setInt(_streakKey, _currentStreak);
     } else {
       _dailyWaterL = prefs.getDouble(_dailyWaterKey) ?? 0;
@@ -105,6 +129,20 @@ class UserDataService {
       _dailySteps = prefs.getInt(_dailyStepsKey) ?? 0;
       _dailyExerciseMin = prefs.getInt(_dailyExerciseMinKey) ?? 0;
       _currentStreak = prefs.getInt(_streakKey) ?? 0;
+      _dailyQuickWorkouts = prefs.getInt(_quickWorkoutsKey) ?? 0;
+      _dailyQuickCalories = prefs.getInt(_quickCaloriesKey) ?? 0;
+      _weeklyQuickWorkouts = prefs.getInt(_weeklyQuickWorkoutsKey) ?? 0;
+      // Load exercise log
+      final logJson = prefs.getString(_exerciseLogKey);
+      if (logJson != null) {
+        try {
+          _exerciseLog = List<Map<String, dynamic>>.from(
+            (jsonDecode(logJson) as List).map((e) => Map<String, dynamic>.from(e)),
+          );
+        } catch (_) {
+          _exerciseLog = [];
+        }
+      }
     }
 
     _bestStreak = prefs.getInt(_bestStreakKey) ?? 0;
@@ -162,6 +200,63 @@ class UserDataService {
     _dailyExerciseMin += minutes;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_dailyExerciseMinKey, _dailyExerciseMin);
+  }
+
+  /// Log a completed quick workout.
+  Future<void> logQuickWorkout(int caloriesBurned) async {
+    _dailyQuickWorkouts++;
+    _weeklyQuickWorkouts++;
+    _dailyQuickCalories += caloriesBurned;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_quickWorkoutsKey, _dailyQuickWorkouts);
+    await prefs.setInt(_weeklyQuickWorkoutsKey, _weeklyQuickWorkouts);
+    await prefs.setInt(_quickCaloriesKey, _dailyQuickCalories);
+  }
+
+  /// Log a specific exercise with sets, reps, and estimated duration/calories.
+  Future<void> logExerciseEntry({
+    required String name,
+    required String icon,
+    required int sets,
+    required int reps,
+    required int estimatedMinutes,
+    required int caloriesBurned,
+  }) async {
+    final entry = {
+      'name': name,
+      'icon': icon,
+      'sets': sets,
+      'reps': reps,
+      'minutes': estimatedMinutes,
+      'calories': caloriesBurned,
+      'time': DateTime.now().toIso8601String(),
+    };
+    _exerciseLog.add(entry);
+    _dailyExerciseMin += estimatedMinutes;
+    _dailyQuickWorkouts++;
+    _dailyQuickCalories += caloriesBurned;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_exerciseLogKey, jsonEncode(_exerciseLog));
+    await prefs.setInt(_dailyExerciseMinKey, _dailyExerciseMin);
+    await prefs.setInt(_quickWorkoutsKey, _dailyQuickWorkouts);
+    await prefs.setInt(_quickCaloriesKey, _dailyQuickCalories);
+  }
+
+  /// Remove a logged exercise by index.
+  Future<void> removeExerciseEntry(int index) async {
+    if (index < 0 || index >= _exerciseLog.length) return;
+    final entry = _exerciseLog[index];
+    final minutes = (entry['minutes'] as int?) ?? 0;
+    final calories = (entry['calories'] as int?) ?? 0;
+    _exerciseLog.removeAt(index);
+    _dailyExerciseMin = (_dailyExerciseMin - minutes).clamp(0, 9999);
+    _dailyQuickWorkouts = (_dailyQuickWorkouts - 1).clamp(0, 9999);
+    _dailyQuickCalories = (_dailyQuickCalories - calories).clamp(0, 99999);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_exerciseLogKey, jsonEncode(_exerciseLog));
+    await prefs.setInt(_dailyExerciseMinKey, _dailyExerciseMin);
+    await prefs.setInt(_quickWorkoutsKey, _dailyQuickWorkouts);
+    await prefs.setInt(_quickCaloriesKey, _dailyQuickCalories);
   }
 
   /// Clear all data (for testing / logout).

@@ -58,13 +58,13 @@ class TransformationCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Health Transformation', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+                      Text('Health Transformation', style: AppTypography.h4(color: AppColors.textPrimary)),
                       const SizedBox(height: 2),
                       Text(
                         isNewUser
                             ? 'Your baseline • Just started'
                             : 'Since onboarding • $daysSince ${daysSince == 1 ? 'day' : 'days'} ago',
-                        style: AppTypography.caption(color: AppColors.darkTextSecondary),
+                        style: AppTypography.caption(color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -114,8 +114,8 @@ class TransformationCard extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(m.label, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
-                              Text(m.value, style: AppTypography.caption(color: AppColors.darkTextPrimary)),
+                              Text(m.label, style: AppTypography.caption(color: AppColors.textSecondary)),
+                              Text(m.value, style: AppTypography.caption(color: AppColors.textPrimary)),
                             ],
                           ),
                           const SizedBox(height: 4),
@@ -267,9 +267,9 @@ class TransformationCard extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(AppTheme.spacing20),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.darkCardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Row(
           children: [
@@ -286,9 +286,9 @@ class TransformationCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('No Assessment Yet', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+                  Text('No Assessment Yet', style: AppTypography.h4(color: AppColors.textPrimary)),
                   const SizedBox(height: 2),
-                  Text('Complete your health assessment to start tracking', style: AppTypography.bodySmall(color: AppColors.darkTextSecondary)),
+                  Text('Complete your health assessment to start tracking', style: AppTypography.bodySmall(color: AppColors.textSecondary)),
                 ],
               ),
             ),

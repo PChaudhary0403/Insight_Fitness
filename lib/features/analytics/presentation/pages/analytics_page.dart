@@ -25,7 +25,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     final daysSince = data.daysSinceJoining;
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -38,13 +38,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Analytics', style: AppTypography.h1(color: AppColors.darkTextPrimary)),
+                    Text('Analytics', style: AppTypography.h1(color: AppColors.textPrimary)),
                     const SizedBox(height: 4),
                     Text(
                       daysSince == 0
                           ? 'Your journey starts today — data will build up here'
                           : 'Day $daysSince of your health journey',
-                      style: AppTypography.bodySmall(color: AppColors.darkTextSecondary),
+                      style: AppTypography.bodySmall(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -56,7 +56,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: AppColors.darkSurface,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                   ),
                   child: Row(
@@ -76,7 +76,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                               child: Text(
                                 e.value,
                                 style: AppTypography.bodySmall(
-                                  color: isActive ? Colors.white : AppColors.darkTextSecondary,
+                                  color: isActive ? Colors.white : AppColors.textSecondary,
                                 ),
                               ),
                             ),
@@ -129,16 +129,16 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         width: double.infinity,
         padding: const EdgeInsets.all(AppTheme.spacing20),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          border: Border.all(color: AppColors.darkCardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text('Health Score', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+                Text('Health Score', style: AppTypography.h4(color: AppColors.textPrimary)),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -171,7 +171,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   ? Center(
                       child: Text(
                         'Start tracking to see your trend',
-                        style: AppTypography.body(color: AppColors.darkTextTertiary),
+                        style: AppTypography.body(color: AppColors.textTertiary),
                       ),
                     )
                   : LineChart(
@@ -181,7 +181,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           drawVerticalLine: false,
                           horizontalInterval: 25,
                           getDrawingHorizontalLine: (value) => FlLine(
-                            color: AppColors.darkDivider,
+                            color: AppColors.dividerColor,
                             strokeWidth: 0.5,
                           ),
                         ),
@@ -197,7 +197,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                 if (idx >= 0 && idx < labels.length) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8),
-                                    child: Text(labels[idx], style: AppTypography.label(color: AppColors.darkTextTertiary)),
+                                    child: Text(labels[idx], style: AppTypography.label(color: AppColors.textTertiary)),
                                   );
                                 }
                                 return const SizedBox.shrink();
@@ -224,7 +224,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                   radius: index == spots.length - 1 ? 5 : 3,
                                   color: AppColors.primary,
                                   strokeWidth: 2,
-                                  strokeColor: AppColors.darkSurface,
+                                  strokeColor: AppColors.surface,
                                 );
                               },
                             ),
@@ -294,17 +294,17 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         width: double.infinity,
         padding: const EdgeInsets.all(AppTheme.spacing20),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          border: Border.all(color: AppColors.darkCardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Hydration', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+            Text('Hydration', style: AppTypography.h4(color: AppColors.textPrimary)),
             Text(
               'Today: ${todayWater.toStringAsFixed(1)}L / ${target.toStringAsFixed(1)}L target',
-              style: AppTypography.caption(color: AppColors.darkTextSecondary),
+              style: AppTypography.caption(color: AppColors.textSecondary),
             ),
             const SizedBox(height: AppTheme.spacing20),
             SizedBox(
@@ -322,7 +322,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         getTitlesWidget: (value, meta) {
                           final idx = value.toInt();
                           if (idx >= 0 && idx < barLabels.length) {
-                            return Text(barLabels[idx], style: AppTypography.label(color: AppColors.darkTextTertiary));
+                            return Text(barLabels[idx], style: AppTypography.label(color: AppColors.textTertiary));
                           }
                           return const SizedBox.shrink();
                         },
@@ -372,14 +372,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         width: double.infinity,
         padding: const EdgeInsets.all(AppTheme.spacing20),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          border: Border.all(color: AppColors.darkCardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$rangeLabel Summary', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+            Text('$rangeLabel Summary', style: AppTypography.h4(color: AppColors.textPrimary)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -455,14 +455,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           width: double.infinity,
           padding: const EdgeInsets.all(AppTheme.spacing20),
           decoration: BoxDecoration(
-            color: AppColors.darkSurface,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-            border: Border.all(color: AppColors.darkCardBorder),
+            border: Border.all(color: AppColors.cardBorder),
           ),
           child: Center(
             child: Text(
               'Complete your health assessment to see activity breakdown',
-              style: AppTypography.body(color: AppColors.darkTextTertiary),
+              style: AppTypography.body(color: AppColors.textTertiary),
               textAlign: TextAlign.center,
             ),
           ),
@@ -483,14 +483,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         width: double.infinity,
         padding: const EdgeInsets.all(AppTheme.spacing20),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          border: Border.all(color: AppColors.darkCardBorder),
+          border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Health Breakdown', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+            Text('Health Breakdown', style: AppTypography.h4(color: AppColors.textPrimary)),
             const SizedBox(height: 16),
             ...items.map((item) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -501,7 +501,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         decoration: BoxDecoration(color: item.color, shape: BoxShape.circle),
                       ),
                       const SizedBox(width: 12),
-                      Expanded(child: Text(item.label, style: AppTypography.body(color: AppColors.darkTextSecondary))),
+                      Expanded(child: Text(item.label, style: AppTypography.body(color: AppColors.textSecondary))),
                       Text(item.value, style: AppTypography.bodyMedium(color: item.color)),
                     ],
                   ),
@@ -565,8 +565,8 @@ class _SummaryItem extends StatelessWidget {
         children: [
           Icon(icon, color: color, size: 20),
           const SizedBox(height: 6),
-          Text(value, style: AppTypography.h4(color: AppColors.darkTextPrimary)),
-          Text(label, style: AppTypography.caption(color: AppColors.darkTextTertiary)),
+          Text(value, style: AppTypography.h4(color: AppColors.textPrimary)),
+          Text(label, style: AppTypography.caption(color: AppColors.textTertiary)),
         ],
       ),
     );

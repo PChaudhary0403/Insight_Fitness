@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing32),
@@ -42,9 +42,9 @@ class _RegisterPageState extends State<RegisterPage> {
               // ─── Back Button ────────────────────────────
               IconButton(
                 onPressed: () => context.go('/welcome'),
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: AppColors.darkTextPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ),
 
@@ -53,14 +53,14 @@ class _RegisterPageState extends State<RegisterPage> {
               // ─── Header ─────────────────────────────────
               Text(
                 'Create\nAccount 🚀',
-                style: AppTypography.display(color: AppColors.darkTextPrimary),
+                style: AppTypography.display(color: AppColors.textPrimary),
               ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.1, end: 0),
 
               const SizedBox(height: AppTheme.spacing8),
               Text(
                 'Start your health journey today',
                 style: AppTypography.bodyLarge(
-                  color: AppColors.darkTextSecondary,
+                  color: AppColors.textSecondary,
                 ),
               ).animate(delay: 200.ms).fadeIn(duration: 400.ms),
 
@@ -96,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     _obscurePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: AppColors.darkTextTertiary,
+                    color: AppColors.textTertiary,
                     size: 20,
                   ),
                   onPressed: () =>
@@ -148,12 +148,12 @@ class _RegisterPageState extends State<RegisterPage> {
               // ─── Divider ────────────────────────────────
               Row(
                 children: [
-                  Expanded(child: Container(height: 1, color: AppColors.darkDivider)),
+                  Expanded(child: Container(height: 1, color: AppColors.dividerColor)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
-                    child: Text('or', style: AppTypography.caption(color: AppColors.darkTextTertiary)),
+                    child: Text('or', style: AppTypography.caption(color: AppColors.textTertiary)),
                   ),
-                  Expanded(child: Container(height: 1, color: AppColors.darkDivider)),
+                  Expanded(child: Container(height: 1, color: AppColors.dividerColor)),
                 ],
               ).animate(delay: 700.ms).fadeIn(duration: 400.ms),
 
@@ -167,7 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(width: AppTheme.spacing16),
                   Expanded(
-                    child: _buildSocialTile(Icons.apple_rounded, AppColors.darkTextPrimary, () => context.go('/health-assessment')),
+                    child: _buildSocialTile(Icons.apple_rounded, AppColors.textPrimary, () => context.go('/health-assessment')),
                   ),
                 ],
               ).animate(delay: 800.ms).fadeIn(duration: 400.ms),
@@ -181,7 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: RichText(
                     text: TextSpan(
                       text: 'Already have an account? ',
-                      style: AppTypography.body(color: AppColors.darkTextSecondary),
+                      style: AppTypography.body(color: AppColors.textSecondary),
                       children: [
                         TextSpan(
                           text: 'Sign In',
@@ -211,18 +211,18 @@ class _RegisterPageState extends State<RegisterPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkDivider),
+        border: Border.all(color: AppColors.dividerColor),
       ),
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscure,
-        style: AppTypography.body(color: AppColors.darkTextPrimary),
+        style: AppTypography.body(color: AppColors.textPrimary),
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: Icon(icon, color: AppColors.darkTextTertiary, size: 20),
+          prefixIcon: Icon(icon, color: AppColors.textTertiary, size: 20),
           suffixIcon: suffix,
           filled: false,
           border: InputBorder.none,
@@ -244,9 +244,9 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Container(
         height: 56,
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          border: Border.all(color: AppColors.darkDivider),
+          border: Border.all(color: AppColors.dividerColor),
         ),
         child: Center(
           child: Icon(icon, color: color, size: 32),

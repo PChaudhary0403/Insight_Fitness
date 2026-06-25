@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/services/user_data_service.dart';
+import '../../../../shared/services/notification_service.dart';
 
 /// User profile page — reads ALL data from UserDataService.
 class ProfilePage extends StatelessWidget {
@@ -48,7 +50,7 @@ class ProfilePage extends StatelessWidget {
     final scoreColor = AppColors.healthScoreGradient(score)[0];
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -69,15 +71,15 @@ class ProfilePage extends StatelessWidget {
                 ),
               ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.8, 0.8)),
               const SizedBox(height: AppTheme.spacing12),
-              Text(data.userName, style: AppTypography.h2(color: AppColors.darkTextPrimary))
+              Text(data.userName, style: AppTypography.h2(color: AppColors.textPrimary))
                   .animate().fadeIn(delay: 100.ms),
               if (profile != null) ...[
                 Text(
                   '${profile.gender[0].toUpperCase()}${profile.gender.substring(1)} • ${profile.age} years • ${profile.weightKg.toStringAsFixed(0)} kg',
-                  style: AppTypography.body(color: AppColors.darkTextSecondary),
+                  style: AppTypography.body(color: AppColors.textSecondary),
                 ).animate().fadeIn(delay: 150.ms),
               ],
-              Text('Joined $joinStr', style: AppTypography.caption(color: AppColors.darkTextTertiary))
+              Text('Joined $joinStr', style: AppTypography.caption(color: AppColors.textTertiary))
                   .animate().fadeIn(delay: 200.ms),
               const SizedBox(height: AppTheme.spacing24),
 
@@ -93,7 +95,7 @@ class ProfilePage extends StatelessWidget {
                     label: 'Streak',
                     value: '$streak',
                     sub: streak == 0 ? 'Start!' : 'days 🔥',
-                    color: streak > 0 ? const Color(0xFFFF6B35) : AppColors.darkTextTertiary,
+                    color: streak > 0 ? Color(0xFFFF6B35) : AppColors.textTertiary,
                   )),
                 ]),
               ).animate(delay: 250.ms).fadeIn().slideY(begin: 0.05, end: 0),
@@ -135,6 +137,20 @@ class ProfilePage extends StatelessWidget {
                 'Privacy & Security',
                 'Manage your data',
                 () => _showPrivacySecurity(context),
+              ),
+              _buildMenuItem(
+                context,
+                Icons.notifications_outlined,
+                'Notifications',
+                'Manage reminders & alerts',
+                () => _showNotificationSettings(context),
+              ),
+              _buildMenuItem(
+                context,
+                Icons.settings_outlined,
+                'Settings',
+                'Theme, language & preferences',
+                () => context.push('/settings'),
               ),
               _buildMenuItem(
                 context,
@@ -191,25 +207,25 @@ class ProfilePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing24, vertical: 3),
       child: Container(
         decoration: BoxDecoration(
-          color: isDisabled ? AppColors.darkSurface.withValues(alpha: 0.5) : AppColors.darkSurface,
+          color: isDisabled ? AppColors.surface.withValues(alpha: 0.5) : AppColors.surface,
           borderRadius: BorderRadius.circular(14),
         ),
         child: ListTile(
           leading: Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: (isDisabled ? AppColors.darkTextTertiary : AppColors.primary).withValues(alpha: 0.12),
+              color: (isDisabled ? AppColors.textTertiary : AppColors.primary).withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: isDisabled ? AppColors.darkTextTertiary : AppColors.darkTextSecondary, size: 20),
+            child: Icon(icon, color: isDisabled ? AppColors.textTertiary : AppColors.textSecondary, size: 20),
           ),
           title: Text(
             title,
-            style: AppTypography.bodyMedium(color: isDisabled ? AppColors.darkTextTertiary : AppColors.darkTextPrimary),
+            style: AppTypography.bodyMedium(color: isDisabled ? AppColors.textTertiary : AppColors.textPrimary),
           ),
           subtitle: Text(
             subtitle,
-            style: AppTypography.caption(color: isDisabled ? AppColors.darkTextTertiary : AppColors.darkTextSecondary),
+            style: AppTypography.caption(color: isDisabled ? AppColors.textTertiary : AppColors.textSecondary),
           ),
           trailing: isDisabled
               ? Container(
@@ -220,7 +236,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   child: Text('Soon', style: AppTypography.caption(color: AppColors.warning)),
                 )
-              : const Icon(Icons.chevron_right_rounded, color: AppColors.darkTextTertiary, size: 20),
+              : Icon(Icons.chevron_right_rounded, color: AppColors.textTertiary, size: 20),
           onTap: onTap,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
@@ -242,8 +258,8 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.75),
-        decoration: const BoxDecoration(
-          color: AppColors.darkSurface,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -252,7 +268,7 @@ class ProfilePage extends StatelessWidget {
             _sheetHandle(),
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Personal Info', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+              child: Text('Personal Info', style: AppTypography.h3(color: AppColors.textPrimary)),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -297,8 +313,8 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: AppColors.darkSurface,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -306,7 +322,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             _sheetHandle(),
             const SizedBox(height: 16),
-            Text('Dietary Preferences', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            Text('Dietary Preferences', style: AppTypography.h3(color: AppColors.textPrimary)),
             const SizedBox(height: 20),
             _infoRow('Diet Type', _dietLabel(p.dietaryPreference)),
             _infoRow('Water Intake', '${p.waterIntakeLiters.toStringAsFixed(1)}L / day'),
@@ -329,18 +345,18 @@ class ProfilePage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: AppColors.darkSurface,
+        backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('⌚', style: TextStyle(fontSize: 48)),
             const SizedBox(height: 16),
-            Text('Connected Devices', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            Text('Connected Devices', style: AppTypography.h3(color: AppColors.textPrimary)),
             const SizedBox(height: 8),
             Text(
               'We\'re working on integrating wearable devices like smartwatches and fitness bands for automatic health data syncing.\n\nStay tuned!',
-              style: AppTypography.body(color: AppColors.darkTextSecondary),
+              style: AppTypography.body(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
@@ -369,8 +385,8 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (_) => Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: AppColors.darkSurface,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -378,7 +394,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             _sheetHandle(),
             const SizedBox(height: 16),
-            Text('Privacy & Security', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            Text('Privacy & Security', style: AppTypography.h3(color: AppColors.textPrimary)),
             const SizedBox(height: 20),
             _privacyItem(Icons.lock_rounded, 'Data Encryption', 'Your health data is stored securely on your device', true),
             _privacyItem(Icons.cloud_off_rounded, 'Offline First', 'All data stays on your device — no cloud uploads', true),
@@ -409,8 +425,8 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
-                Text(desc, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+                Text(title, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
+                Text(desc, style: AppTypography.caption(color: AppColors.textSecondary)),
               ],
             ),
           ),
@@ -432,8 +448,8 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: AppColors.darkSurface,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -441,22 +457,22 @@ class ProfilePage extends StatelessWidget {
           children: [
             _sheetHandle(),
             const SizedBox(height: 16),
-            Text('Export My Data', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            Text('Export My Data', style: AppTypography.h3(color: AppColors.textPrimary)),
             const SizedBox(height: 8),
             Text('Download a summary of your health profile and tracking data.',
-                style: AppTypography.body(color: AppColors.darkTextSecondary), textAlign: TextAlign.center),
+                style: AppTypography.body(color: AppColors.textSecondary), textAlign: TextAlign.center),
             const SizedBox(height: 20),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.darkSurfaceElevated,
+                color: AppColors.surfaceElevated,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Report includes:', style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
+                  Text('Report includes:', style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
                   const SizedBox(height: 8),
                   _exportItem('✅ Health Assessment Results'),
                   _exportItem('✅ BMI & Body Metrics'),
@@ -492,7 +508,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget _exportItem(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 4),
-        child: Text(text, style: AppTypography.bodySmall(color: AppColors.darkTextSecondary)),
+        child: Text(text, style: AppTypography.bodySmall(color: AppColors.textSecondary)),
       );
 
   // ─── Retake Assessment ─────────────────────────────────
@@ -502,17 +518,17 @@ class ProfilePage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppColors.darkSurface,
+        backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Retake Assessment?', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+        title: Text('Retake Assessment?', style: AppTypography.h3(color: AppColors.textPrimary)),
         content: Text(
           'This will replace your current health profile with a new assessment. Your daily tracking data will be reset.',
-          style: AppTypography.body(color: AppColors.darkTextSecondary),
+          style: AppTypography.body(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('Cancel', style: AppTypography.bodyMedium(color: AppColors.darkTextSecondary)),
+            child: Text('Cancel', style: AppTypography.bodyMedium(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -530,20 +546,32 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
+  // ─── Notification Settings Sheet ────────────────────────
+
+  void _showNotificationSettings(BuildContext context) {
+    final notif = NotificationService.instance;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _NotificationSettingsSheet(notif: notif),
+    );
+  }
+
   // ─── Helpers ────────────────────────────────────────────
 
   Widget _sheetHandle() => Container(
         margin: const EdgeInsets.only(top: 12),
         width: 40, height: 4,
-        decoration: BoxDecoration(color: AppColors.darkDivider, borderRadius: BorderRadius.circular(2)),
+        decoration: BoxDecoration(color: AppColors.dividerColor, borderRadius: BorderRadius.circular(2)),
       );
 
   Widget _infoRow(String label, String value) => Padding(
         padding: const EdgeInsets.only(bottom: 14),
         child: Row(
           children: [
-            Expanded(flex: 2, child: Text(label, style: AppTypography.bodySmall(color: AppColors.darkTextSecondary))),
-            Expanded(flex: 3, child: Text(value, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary), textAlign: TextAlign.right)),
+            Expanded(flex: 2, child: Text(label, style: AppTypography.bodySmall(color: AppColors.textSecondary))),
+            Expanded(flex: 3, child: Text(value, style: AppTypography.bodyMedium(color: AppColors.textPrimary), textAlign: TextAlign.right)),
           ],
         ),
       );
@@ -551,7 +579,7 @@ class ProfilePage extends StatelessWidget {
   void _showSnack(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(msg),
-      backgroundColor: AppColors.darkSurfaceElevated,
+      backgroundColor: AppColors.surfaceElevated,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ));
@@ -596,16 +624,230 @@ class _StatBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkCardBorder),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(children: [
-        Text(label, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+        Text(label, style: AppTypography.caption(color: AppColors.textSecondary)),
         const SizedBox(height: 4),
         Text(value, style: AppTypography.h3(color: color)),
-        Text(sub, style: AppTypography.label(color: AppColors.darkTextSecondary)),
+        Text(sub, style: AppTypography.label(color: AppColors.textSecondary)),
       ]),
     );
+  }
+}
+
+// ─── Notification Settings Sheet ──────────────────────────────
+
+class _NotificationSettingsSheet extends StatefulWidget {
+  final NotificationService notif;
+  const _NotificationSettingsSheet({required this.notif});
+
+  @override
+  State<_NotificationSettingsSheet> createState() => _NotificationSettingsSheetState();
+}
+
+class _NotificationSettingsSheetState extends State<_NotificationSettingsSheet> {
+  bool _hydration = true;
+  bool _meals = true;
+  bool _exercise = true;
+  bool _screenBreaks = true;
+  bool _hasPermission = false;
+  int _pendingCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkStatus();
+  }
+
+  Future<void> _checkStatus() async {
+    final perm = await widget.notif.hasPermission();
+    final pending = await widget.notif.getPending();
+    if (mounted) {
+      setState(() {
+        _hasPermission = perm;
+        _pendingCount = pending.length;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Container(
+          margin: const EdgeInsets.only(top: 12),
+          width: 40, height: 4,
+          decoration: BoxDecoration(color: AppColors.dividerColor, borderRadius: BorderRadius.circular(2)),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text('Notifications', style: AppTypography.h3(color: AppColors.textPrimary)),
+        ),
+        if (!_hasPermission && !kIsWeb) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.warning.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.warning.withValues(alpha: 0.2)),
+              ),
+              child: Row(children: [
+                const Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20),
+                const SizedBox(width: 12),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Permission Required', style: AppTypography.bodyMedium(color: AppColors.warning)),
+                  Text('Allow notifications to receive reminders.',
+                      style: AppTypography.caption(color: AppColors.textSecondary)),
+                ])),
+                TextButton(
+                  onPressed: () async {
+                    final granted = await widget.notif.requestPermission();
+                    if (granted && mounted) {
+                      setState(() => _hasPermission = true);
+                      _snack('✅ Notification permission granted!');
+                    }
+                  },
+                  child: Text('Grant', style: AppTypography.bodyMedium(color: AppColors.primary)),
+                ),
+              ]),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        Flexible(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+            child: Column(children: [
+              _toggle('💧 Hydration Reminders', 'Every 90 minutes during the day', _hydration, (v) async {
+                setState(() => _hydration = v);
+                if (v) {
+                  await widget.notif.scheduleHydrationReminders();
+                } else {
+                  await widget.notif.cancelHydrationReminders();
+                }
+                _snack(v ? '💧 Hydration reminders enabled' : 'Hydration reminders disabled');
+              }),
+              _toggle('🍽️ Meal Reminders', 'Breakfast, lunch, snack, dinner', _meals, (v) async {
+                setState(() => _meals = v);
+                if (v) {
+                  await widget.notif.scheduleMealReminders();
+                } else {
+                  await widget.notif.cancelMealReminders();
+                }
+                _snack(v ? '🍽️ Meal reminders enabled' : 'Meal reminders disabled');
+              }),
+              _toggle('🧘 Exercise Reminders', 'Hourly stand-up / stretch', _exercise, (v) async {
+                setState(() => _exercise = v);
+                if (v) {
+                  await widget.notif.scheduleExerciseReminders();
+                } else {
+                  await widget.notif.cancelExerciseReminders();
+                }
+                _snack(v ? '🧘 Exercise reminders enabled' : 'Exercise reminders disabled');
+              }),
+              _toggle('👁️ Screen Break Reminders', '20-20-20 rule every 30 min', _screenBreaks, (v) async {
+                setState(() => _screenBreaks = v);
+                if (v) {
+                  await widget.notif.scheduleScreenBreakReminders();
+                } else {
+                  await widget.notif.cancelScreenBreakReminders();
+                }
+                _snack(v ? '👁️ Screen break reminders enabled' : 'Screen break reminders disabled');
+              }),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceElevated,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(children: [
+                  Icon(Icons.schedule_rounded, color: AppColors.textTertiary, size: 16),
+                  const SizedBox(width: 8),
+                  Text('$_pendingCount scheduled notifications',
+                      style: AppTypography.caption(color: AppColors.textSecondary)),
+                ]),
+              ),
+              const SizedBox(height: 16),
+              // TEST NOTIFICATION BUTTON
+              SizedBox(
+                width: double.infinity, height: 48,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await widget.notif.showInstant(
+                      title: '🔔 INSIGHT Test',
+                      body: 'Notifications are working! You\'ll receive health reminders throughout the day.',
+                    );
+                    _snack('📢 Test notification sent! Check your notification shade.');
+                    await _checkStatus();
+                  },
+                  icon: const Icon(Icons.notifications_active_rounded, size: 18),
+                  label: const Text('Send Test Notification'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () async {
+                  await widget.notif.cancelAll();
+                  _snack('All notifications cancelled.');
+                  await _checkStatus();
+                },
+                child: Text('Cancel All Notifications',
+                    style: AppTypography.bodySmall(color: AppColors.error)),
+              ),
+            ]),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget _toggle(String title, String sub, bool value, ValueChanged<bool> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceElevated,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(children: [
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
+            Text(sub, style: AppTypography.caption(color: AppColors.textSecondary)),
+          ])),
+          Switch(
+            value: value,
+            activeColor: AppColors.primary,
+            onChanged: onChanged,
+          ),
+        ]),
+      ),
+    );
+  }
+
+  void _snack(String msg) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      backgroundColor: AppColors.surfaceElevated,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ));
   }
 }

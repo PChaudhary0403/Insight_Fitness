@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing32),
@@ -39,17 +39,17 @@ class _LoginPageState extends State<LoginPage> {
 
               // ─── Header ─────────────────────────────────
               Text(
-                'Welcome\nBack ✨',
+                'Welcome\nBack',
                 style: AppTypography.display(
-                  color: AppColors.darkTextPrimary,
+                  color: AppColors.textPrimary,
                 ),
               ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.1, end: 0),
 
               const SizedBox(height: AppTheme.spacing8),
               Text(
-                'Sign in to continue your health journey',
+                'Sign in to access your dashboard',
                 style: AppTypography.bodyLarge(
-                  color: AppColors.darkTextSecondary,
+                  color: AppColors.textSecondary,
                 ),
               ).animate(delay: 200.ms).fadeIn(duration: 400.ms),
 
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                     _obscurePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: AppColors.darkTextTertiary,
+                    color: AppColors.textTertiary,
                     size: 20,
                   ),
                   onPressed: () =>
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: AppColors.darkDivider,
+                      color: AppColors.dividerColor,
                     ),
                   ),
                   Padding(
@@ -156,14 +156,14 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'or continue with',
                       style: AppTypography.caption(
-                        color: AppColors.darkTextTertiary,
+                        color: AppColors.textTertiary,
                       ),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: AppColors.darkDivider,
+                      color: AppColors.dividerColor,
                     ),
                   ),
                 ],
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
               _buildSocialButton(
                 label: 'Continue with Apple',
                 icon: Icons.apple_rounded,
-                iconColor: AppColors.darkTextPrimary,
+                iconColor: AppColors.textPrimary,
                 onPressed: () => context.go('/home'),
               ).animate(delay: 800.ms).fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0),
 
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                     text: TextSpan(
                       text: "Don't have an account? ",
                       style: AppTypography.body(
-                        color: AppColors.darkTextSecondary,
+                        color: AppColors.textSecondary,
                       ),
                       children: [
                         TextSpan(
@@ -231,18 +231,18 @@ class _LoginPageState extends State<LoginPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkDivider),
+        border: Border.all(color: AppColors.dividerColor),
       ),
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscure,
-        style: AppTypography.body(color: AppColors.darkTextPrimary),
+        style: AppTypography.body(color: AppColors.textPrimary),
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: Icon(icon, color: AppColors.darkTextTertiary, size: 20),
+          prefixIcon: Icon(icon, color: AppColors.textTertiary, size: 20),
           suffixIcon: suffix,
           filled: false,
           border: InputBorder.none,
@@ -271,14 +271,14 @@ class _LoginPageState extends State<LoginPage> {
         icon: Icon(icon, color: iconColor, size: 28),
         label: Text(
           label,
-          style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary),
+          style: AppTypography.bodyMedium(color: AppColors.textPrimary),
         ),
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.darkDivider),
+          side: BorderSide(color: AppColors.dividerColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
           ),
-          backgroundColor: AppColors.darkSurface,
+          backgroundColor: AppColors.surface,
         ),
       ),
     );

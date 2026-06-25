@@ -167,15 +167,33 @@ class HealthAnalysisEngine {
     return double.parse(min(10.0, score).toStringAsFixed(1));
   }
 
+  // ─── Sleep Duration (minute-level) ──────────────────────
+
+  static double _sleepDurationHours(HealthProfile p) {
+    final wakeParts = p.wakeUpTime.split(':');
+    final sleepParts = p.sleepTime.split(':');
+    final wakeMin = (int.tryParse(wakeParts[0]) ?? 7) * 60 + (int.tryParse(wakeParts.length > 1 ? wakeParts[1] : '0') ?? 0);
+    final sleepMin = (int.tryParse(sleepParts[0]) ?? 23) * 60 + (int.tryParse(sleepParts.length > 1 ? sleepParts[1] : '0') ?? 0);
+    final durationMin = ((1440 - sleepMin) + wakeMin) % 1440; // 1440 = 24*60
+    return durationMin / 60.0;
+  }
+
   // ─── Flag Detection ─────────────────────────────────────
 
   static List<String> _detectFlags(HealthProfile p, double bmi, double hydrationReq) {
     final flags = <String>[];
 
+    // BMI flags
+    if (bmi < 16) flags.add('severely_underweight');
     if (bmi < 18.5) flags.add('underweight');
     if (bmi >= 25 && bmi < 30) flags.add('overweight');
-    if (bmi >= 30) flags.add('obese');
+    if (bmi >= 30 && bmi < 40) flags.add('obese');
+    if (bmi >= 40) flags.add('severely_obese');
 
+    // Medical advisory for extreme values
+    if (bmi < 16 || bmi >= 40) flags.add('consult_doctor');
+
+    // Activity level flags
     if (p.activityLevel == 'sedentary' || p.dailySittingHours >= 10) {
       flags.add('sedentary');
     } else if (p.activityLevel == 'light') {
@@ -186,26 +204,32 @@ class HealthAnalysisEngine {
       flags.add('moderately_active');
     }
 
+    // Hydration
     if (p.waterIntakeLiters < hydrationReq * 0.7) {
       flags.add('dehydrated');
     }
 
-    // Irregular lifestyle detection
-    final wakeHour = int.tryParse(p.wakeUpTime.split(':')[0]) ?? 7;
-    final sleepHour = int.tryParse(p.sleepTime.split(':')[0]) ?? 23;
-    final sleepDuration = (24 - sleepHour + wakeHour) % 24;
-    if (sleepDuration < 6 || sleepDuration > 10 || wakeHour >= 10) {
-      flags.add('irregular_lifestyle');
+    // Sleep duration analysis (minute-level, shift-worker safe)
+    final sleepHours = _sleepDurationHours(p);
+    if (sleepHours < 4) {
+      flags.add('severe_sleep_deprivation');
+      flags.add('consult_doctor');
+    } else if (sleepHours < 6) {
+      flags.add('sleep_deprived');
+    } else if (sleepHours > 9) {
+      flags.add('oversleeping');
     }
+    // Note: wakeHour >= 10 check REMOVED — shift workers are not penalized
 
+    // Stress
     if (p.stressLevel == 'high' || p.stressLevel == 'very_high') {
       flags.add('high_stress');
     }
 
+    // Smoking/alcohol
     if (p.smokingHabit == 'regularly' || p.smokingHabit == 'heavy') {
       flags.add('smoking_risk');
     }
-
     if (p.alcoholHabit == 'moderate' || p.alcoholHabit == 'heavy') {
       flags.add('alcohol_risk');
     }
@@ -214,6 +238,12 @@ class HealthAnalysisEngine {
   }
 
   // ─── Overall Health Score (0-100) ───────────────────────
+  //
+  // Audit-corrected formula:
+  //  • Removed unfounded vegetarian/vegan dietary bias
+  //  • Scaled sleep penalties by severity (3h ≠ 5h)
+  //  • Added severe BMI tiers with score caps
+  //  • Shift workers no longer penalized for late wake times
 
   static int _overallHealthScore(
     HealthProfile p,
@@ -223,9 +253,13 @@ class HealthAnalysisEngine {
   ) {
     double score = 100;
 
-    // BMI penalty (max -25)
-    if (bmi < 18.5) {
+    // BMI penalty — severity-scaled
+    if (bmi < 16) {
+      score -= 30; // severe underweight → medical concern
+    } else if (bmi < 18.5) {
       score -= (18.5 - bmi) * 4;
+    } else if (bmi > 35) {
+      score -= 25 + (bmi - 35) * 2; // severe obesity escalation
     } else if (bmi > 25) {
       score -= (bmi - 25) * 3;
     }
@@ -246,8 +280,14 @@ class HealthAnalysisEngine {
     // Hydration penalty
     if (flags.contains('dehydrated')) score -= 8;
 
-    // Sleep/lifestyle penalty
-    if (flags.contains('irregular_lifestyle')) score -= 10;
+    // Sleep penalty — graduated by severity
+    if (flags.contains('severe_sleep_deprivation')) {
+      score -= 20; // < 4h → medical concern
+    } else if (flags.contains('sleep_deprived')) {
+      score -= 12; // 4-6h → significant penalty
+    } else if (flags.contains('oversleeping')) {
+      score -= 5;  // > 9h → mild concern
+    }
 
     // Stress penalty
     if (flags.contains('high_stress')) score -= 8;
@@ -256,10 +296,11 @@ class HealthAnalysisEngine {
     if (flags.contains('smoking_risk')) score -= 10;
     if (flags.contains('alcohol_risk')) score -= 5;
 
-    // Dietary bonus
-    if (p.dietaryPreference == 'vegetarian' || p.dietaryPreference == 'vegan') {
-      score += 3;
-    }
+    // NOTE: No dietary preference bonus — diet quality, not label, matters.
+
+    // Hard cap for extreme medical conditions
+    if (flags.contains('severely_underweight')) score = score.clamp(5, 45);
+    if (flags.contains('severely_obese')) score = score.clamp(5, 40);
 
     return score.clamp(5, 100).round();
   }
@@ -293,9 +334,21 @@ class HealthAnalysisEngine {
         category: 'weight',
         title: 'Weight Management Goal',
         description:
-            'Your BMI indicates $bmiCategory. Goal: lose ${lose}kg through balanced diet + exercise.',
+            'Your BMI indicates $bmiCategory. Goal: lose ${lose}kg through balanced diet + exercise. Safe rate: 0.5-1kg/week.',
         priority: 'high',
         icon: '⚖️',
+      ));
+    }
+
+    // Medical advisory for extreme values
+    if (flags.contains('consult_doctor')) {
+      items.insert(0, const HealthRoadmapItem(
+        category: 'medical',
+        title: '⚠️ Medical Advisory',
+        description:
+            'Your health profile shows values that may need medical attention. Please consult a healthcare professional for personalized guidance.',
+        priority: 'high',
+        icon: '🏥',
       ));
     }
 
@@ -323,13 +376,31 @@ class HealthAnalysisEngine {
       ));
     }
 
-    // Sleep/lifestyle
-    if (flags.contains('irregular_lifestyle')) {
-      items.add(HealthRoadmapItem(
+    // Sleep — graduated by severity
+    if (flags.contains('severe_sleep_deprivation')) {
+      items.add(const HealthRoadmapItem(
         category: 'sleep',
-        title: 'Sleep Schedule Fix',
+        title: 'Critical: Sleep Deprivation',
         description:
-            'Irregular sleep pattern detected. Aim for 7-8 hours of sleep with consistent wake-up times.',
+            'Less than 4 hours of sleep is a medical concern. Prioritize sleep immediately. Consult a doctor if chronic.',
+        priority: 'high',
+        icon: '🚨',
+      ));
+    } else if (flags.contains('sleep_deprived')) {
+      items.add(const HealthRoadmapItem(
+        category: 'sleep',
+        title: 'Sleep Improvement Needed',
+        description:
+            'You are getting less than 6 hours of sleep. Aim for 7-8 hours with consistent wake-up times.',
+        priority: 'high',
+        icon: '🌙',
+      ));
+    } else if (flags.contains('oversleeping')) {
+      items.add(const HealthRoadmapItem(
+        category: 'sleep',
+        title: 'Sleep Pattern Review',
+        description:
+            'Sleeping more than 9 hours may indicate underlying issues. If persistent, consider consulting a doctor.',
         priority: 'medium',
         icon: '🌙',
       ));

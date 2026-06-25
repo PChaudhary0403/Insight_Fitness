@@ -37,7 +37,7 @@ class _AIChatPageState extends State<AIChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -54,8 +54,8 @@ class _AIChatPageState extends State<AIChatPage> {
                   ),
                   const SizedBox(width: 12),
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('INSIGHT AI', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
-                    Text('Your health assistant', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+                    Text('INSIGHT AI', style: AppTypography.h3(color: AppColors.textPrimary)),
+                    Text('Your health assistant', style: AppTypography.caption(color: AppColors.textSecondary)),
                   ]),
                 ],
               ),
@@ -75,16 +75,16 @@ class _AIChatPageState extends State<AIChatPage> {
                       padding: const EdgeInsets.all(14),
                       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
                       decoration: BoxDecoration(
-                        color: msg.isUser ? AppColors.primary.withValues(alpha: 0.15) : AppColors.darkSurface,
+                        color: msg.isUser ? AppColors.primary.withValues(alpha: 0.15) : AppColors.surface,
                         borderRadius: BorderRadius.only(
                           topLeft: const Radius.circular(16),
                           topRight: const Radius.circular(16),
                           bottomLeft: Radius.circular(msg.isUser ? 16 : 4),
                           bottomRight: Radius.circular(msg.isUser ? 4 : 16),
                         ),
-                        border: Border.all(color: msg.isUser ? AppColors.primary.withValues(alpha: 0.2) : AppColors.darkCardBorder),
+                        border: Border.all(color: msg.isUser ? AppColors.primary.withValues(alpha: 0.2) : AppColors.cardBorder),
                       ),
-                      child: Text(msg.text, style: AppTypography.body(color: AppColors.darkTextPrimary)),
+                      child: Text(msg.text, style: AppTypography.body(color: AppColors.textPrimary)),
                     ),
                   ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.05, end: 0);
                 },
@@ -110,17 +110,17 @@ class _AIChatPageState extends State<AIChatPage> {
             Container(
               padding: EdgeInsets.fromLTRB(20, 12, 12, 12 + MediaQuery.of(context).padding.bottom),
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
-                border: Border(top: BorderSide(color: AppColors.darkDivider)),
+                color: AppColors.surface,
+                border: Border(top: BorderSide(color: AppColors.dividerColor)),
               ),
               child: Row(children: [
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    style: AppTypography.body(color: AppColors.darkTextPrimary),
+                    style: AppTypography.body(color: AppColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'Ask INSIGHT AI...',
-                      hintStyle: AppTypography.body(color: AppColors.darkTextTertiary),
+                      hintStyle: AppTypography.body(color: AppColors.textTertiary),
                       border: InputBorder.none, filled: false,
                     ),
                     onSubmitted: (_) => _send(),

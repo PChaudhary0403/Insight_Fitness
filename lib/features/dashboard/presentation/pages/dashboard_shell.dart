@@ -2,12 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../shared/services/theme_service.dart';
 
 /// Main app shell with glassmorphic bottom navigation.
-class DashboardShell extends StatelessWidget {
+class DashboardShell extends StatefulWidget {
   final Widget child;
-
   const DashboardShell({super.key, required this.child});
+  @override
+  State<DashboardShell> createState() => _DashboardShellState();
+}
+
+class _DashboardShellState extends State<DashboardShell> {
+  @override
+  void initState() {
+    super.initState();
+    ThemeService.instance.addListener(_refresh);
+  }
+
+  @override
+  void dispose() {
+    ThemeService.instance.removeListener(_refresh);
+    super.dispose();
+  }
+
+  void _refresh() => setState(() {});
 
   int _currentIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
@@ -23,15 +41,15 @@ class DashboardShell extends StatelessWidget {
     final currentIndex = _currentIndex(context);
 
     return Scaffold(
-      body: child,
+      body: widget.child,
       extendBody: true,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface.withValues(alpha: 0.95),
+          color: AppColors.surface.withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: AppColors.darkDivider.withValues(alpha: 0.5),
+            color: AppColors.dividerColor.withValues(alpha: 0.5),
           ),
           boxShadow: [
             BoxShadow(
@@ -48,37 +66,16 @@ class DashboardShell extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(
-                  icon: Icons.home_rounded,
-                  label: 'Home',
-                  isActive: currentIndex == 0,
-                  onTap: () => context.go('/home'),
-                ),
-                _NavItem(
-                  icon: Icons.bar_chart_rounded,
-                  label: 'Stats',
-                  isActive: currentIndex == 1,
-                  onTap: () => context.go('/analytics'),
-                ),
-                _NavItem(
-                  icon: Icons.check_circle_rounded,
-                  label: 'Check',
-                  isActive: currentIndex == 2,
-                  onTap: () => context.go('/tick-sheet'),
-                  isPrimary: true,
-                ),
-                _NavItem(
-                  icon: Icons.auto_awesome_rounded,
-                  label: 'AI',
-                  isActive: currentIndex == 3,
-                  onTap: () => context.go('/ai-chat'),
-                ),
-                _NavItem(
-                  icon: Icons.person_rounded,
-                  label: 'Me',
-                  isActive: currentIndex == 4,
-                  onTap: () => context.go('/profile'),
-                ),
+                _NavItem(icon: Icons.home_rounded, label: 'Home',
+                  isActive: currentIndex == 0, onTap: () => context.go('/home')),
+                _NavItem(icon: Icons.bar_chart_rounded, label: 'Stats',
+                  isActive: currentIndex == 1, onTap: () => context.go('/analytics')),
+                _NavItem(icon: Icons.check_circle_rounded, label: 'Check',
+                  isActive: currentIndex == 2, onTap: () => context.go('/tick-sheet'), isPrimary: true),
+                _NavItem(icon: Icons.auto_awesome_rounded, label: 'AI',
+                  isActive: currentIndex == 3, onTap: () => context.go('/ai-chat')),
+                _NavItem(icon: Icons.person_rounded, label: 'Me',
+                  isActive: currentIndex == 4, onTap: () => context.go('/profile')),
               ],
             ),
           ),
@@ -96,17 +93,13 @@ class _NavItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const _NavItem({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-    this.isPrimary = false,
-    required this.onTap,
+    required this.icon, required this.label,
+    required this.isActive, this.isPrimary = false, required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final activeColor =
-        isPrimary ? AppColors.primary : AppColors.primaryLight;
+    final activeColor = isPrimary ? AppColors.primary : AppColors.primaryLight;
 
     return GestureDetector(
       onTap: onTap,
@@ -115,28 +108,15 @@ class _NavItem extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: isActive
-            ? BoxDecoration(
-                color: activeColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(16),
-              )
+            ? BoxDecoration(color: activeColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(16))
             : null,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: isPrimary && isActive ? 26 : 24,
-              color: isActive ? activeColor : AppColors.darkTextTertiary,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: AppTypography.label(
-                color: isActive ? activeColor : AppColors.darkTextTertiary,
-              ),
-            ),
-          ],
-        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Icon(icon, size: isPrimary && isActive ? 26 : 24,
+            color: isActive ? activeColor : AppColors.textTertiary),
+          const SizedBox(height: 2),
+          Text(label, style: AppTypography.label(
+            color: isActive ? activeColor : AppColors.textTertiary)),
+        ]),
       ),
     );
   }

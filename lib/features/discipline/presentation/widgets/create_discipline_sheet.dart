@@ -62,8 +62,8 @@ class _CreateDisciplineSheetState extends State<CreateDisciplineSheet> {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
-      decoration: const BoxDecoration(
-        color: AppColors.darkSurface,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -73,11 +73,11 @@ class _CreateDisciplineSheetState extends State<CreateDisciplineSheet> {
           Container(
             margin: const EdgeInsets.only(top: 12),
             width: 40, height: 4,
-            decoration: BoxDecoration(color: AppColors.darkDivider, borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(color: AppColors.dividerColor, borderRadius: BorderRadius.circular(2)),
           ),
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Text('Create Discipline', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            child: Text('Create Discipline', style: AppTypography.h3(color: AppColors.textPrimary)),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -103,12 +103,12 @@ class _CreateDisciplineSheetState extends State<CreateDisciplineSheet> {
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                           decoration: BoxDecoration(
-                            color: sel ? e.value.$4.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+                            color: sel ? e.value.$4.withValues(alpha: 0.15) : AppColors.surfaceElevated,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: sel ? e.value.$4 : AppColors.darkDivider),
+                            border: Border.all(color: sel ? e.value.$4 : AppColors.dividerColor),
                           ),
                           child: Text('${e.value.$1} ${e.value.$2}', style: AppTypography.bodySmall(
-                            color: sel ? e.value.$4 : AppColors.darkTextSecondary,
+                            color: sel ? e.value.$4 : AppColors.textSecondary,
                           )),
                         ),
                       );
@@ -189,18 +189,18 @@ class _CreateDisciplineSheetState extends State<CreateDisciplineSheet> {
     );
   }
 
-  Widget _label(String t) => Text(t, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary));
+  Widget _label(String t) => Text(t, style: AppTypography.bodyMedium(color: AppColors.textPrimary));
 
   Widget _field(TextEditingController c, String hint) => Container(
     margin: const EdgeInsets.only(top: 8),
     decoration: BoxDecoration(
-      color: AppColors.darkSurfaceElevated,
+      color: AppColors.surfaceElevated,
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.darkDivider),
+      border: Border.all(color: AppColors.dividerColor),
     ),
     child: TextField(
       controller: c,
-      style: AppTypography.body(color: AppColors.darkTextPrimary),
+      style: AppTypography.body(color: AppColors.textPrimary),
       decoration: InputDecoration(
         hintText: hint, filled: false, border: InputBorder.none,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -219,11 +219,11 @@ class _CreateDisciplineSheetState extends State<CreateDisciplineSheet> {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: sel ? AppColors.primary.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+              color: sel ? AppColors.primary.withValues(alpha: 0.15) : AppColors.surfaceElevated,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: sel ? AppColors.primary : AppColors.darkDivider),
+              border: Border.all(color: sel ? AppColors.primary : AppColors.dividerColor),
             ),
-            child: Text(e.value, style: AppTypography.bodySmall(color: sel ? AppColors.primary : AppColors.darkTextSecondary)),
+            child: Text(e.value, style: AppTypography.bodySmall(color: sel ? AppColors.primary : AppColors.textSecondary)),
           ),
         );
       }).toList(),
@@ -240,14 +240,14 @@ class _CreateDisciplineSheetState extends State<CreateDisciplineSheet> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.darkSurfaceElevated,
+          color: AppColors.surfaceElevated,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.darkDivider),
+          border: Border.all(color: AppColors.dividerColor),
         ),
         child: Column(children: [
-          Text(label, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+          Text(label, style: AppTypography.caption(color: AppColors.textSecondary)),
           const SizedBox(height: 4),
-          Text(value, style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+          Text(value, style: AppTypography.h4(color: AppColors.textPrimary)),
         ]),
       ),
     );

@@ -124,7 +124,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -224,11 +224,11 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
               child: Container(
                 width: 40, height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.darkSurfaceElevated,
+                  color: AppColors.surfaceElevated,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.arrow_back_ios_new_rounded,
-                    color: AppColors.darkTextPrimary, size: 18),
+                child: Icon(Icons.arrow_back_ios_new_rounded,
+                    color: AppColors.textPrimary, size: 18),
               ),
             )
           else
@@ -238,13 +238,13 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
               children: [
                 Text(
                   _stepTitles[_currentStep],
-                  style: AppTypography.h4(color: AppColors.darkTextPrimary),
+                  style: AppTypography.h4(color: AppColors.textPrimary),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   _stepSubtitles[_currentStep],
-                  style: AppTypography.caption(color: AppColors.darkTextSecondary),
+                  style: AppTypography.caption(color: AppColors.textSecondary),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -279,7 +279,7 @@ class _HealthAssessmentPageState extends State<HealthAssessmentPage> {
                         colors: [AppColors.primary, AppColors.primaryLight],
                       )
                     : null,
-                color: isActive ? null : AppColors.darkSurfaceElevated,
+                color: isActive ? null : AppColors.surfaceElevated,
               ),
             ),
           );

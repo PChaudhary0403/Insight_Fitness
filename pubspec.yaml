@@ -39,6 +39,16 @@ dependencies:
   intl: ^0.20.2
   uuid: ^4.5.1
 
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.10.0
+
+  # Permissions
+  permission_handler: ^11.3.1
+
+  # Device Info (for real screen time on Android)
+  device_info_plus: ^11.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -51,4 +61,3 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/animations/
-

@@ -124,23 +124,23 @@ class _AssessmentStepBasicState extends State<AssessmentStepBasic> {
 
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Text(text, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
+        child: Text(text, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
       );
 
   Widget _textField(TextEditingController ctrl, String hint, IconData icon, VoidCallback onDone) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkDivider),
+        border: Border.all(color: AppColors.dividerColor),
       ),
       child: TextField(
         controller: ctrl,
         onChanged: (_) => onDone(),
-        style: AppTypography.body(color: AppColors.darkTextPrimary),
+        style: AppTypography.body(color: AppColors.textPrimary),
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: Icon(icon, color: AppColors.darkTextTertiary, size: 20),
+          prefixIcon: Icon(icon, color: AppColors.textTertiary, size: 20),
           filled: false,
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
@@ -160,10 +160,10 @@ class _AssessmentStepBasicState extends State<AssessmentStepBasic> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: selected ? AppColors.primary.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+            color: selected ? AppColors.primary.withValues(alpha: 0.15) : AppColors.surfaceElevated,
             borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
             border: Border.all(
-              color: selected ? AppColors.primary : AppColors.darkDivider,
+              color: selected ? AppColors.primary : AppColors.dividerColor,
               width: selected ? 1.5 : 1,
             ),
           ),
@@ -171,7 +171,7 @@ class _AssessmentStepBasicState extends State<AssessmentStepBasic> {
             child: Text(
               label,
               style: AppTypography.bodyMedium(
-                color: selected ? AppColors.primary : AppColors.darkTextSecondary,
+                color: selected ? AppColors.primary : AppColors.textSecondary,
               ),
             ),
           ),
@@ -191,9 +191,9 @@ class _AssessmentStepBasicState extends State<AssessmentStepBasic> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkDivider),
+        border: Border.all(color: AppColors.dividerColor),
       ),
       child: SliderTheme(
         data: SliderThemeData(

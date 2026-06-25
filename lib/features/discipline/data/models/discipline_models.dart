@@ -39,6 +39,36 @@ class DisciplineRule {
         strictness: strictness, verificationMethod: verificationMethod,
         isActive: isActive ?? this.isActive, createdAt: createdAt,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id, 'title': title, 'description': description,
+        'category': category,
+        'iconCode': icon.codePoint,
+        'colorValue': color.toARGB32(),
+        'targetTimeStart': targetTimeStart,
+        'targetTimeEnd': targetTimeEnd,
+        'recurrence': recurrence,
+        'strictness': strictness,
+        'verificationMethod': verificationMethod,
+        'isActive': isActive,
+        'createdAt': createdAt.toIso8601String(),
+      };
+
+  factory DisciplineRule.fromJson(Map<String, dynamic> j) => DisciplineRule(
+        id: j['id'] ?? '',
+        title: j['title'] ?? '',
+        description: j['description'] ?? '',
+        category: j['category'] ?? 'custom',
+        icon: IconData(j['iconCode'] ?? 0xe87d, fontFamily: 'MaterialIcons'),
+        color: Color(j['colorValue'] ?? 0xFF00C9A7),
+        targetTimeStart: j['targetTimeStart'] ?? '06:00',
+        targetTimeEnd: j['targetTimeEnd'] ?? '07:00',
+        recurrence: j['recurrence'] ?? 'daily',
+        strictness: j['strictness'] ?? 'moderate',
+        verificationMethod: j['verificationMethod'] ?? 'manual_checkin',
+        isActive: j['isActive'] ?? true,
+        createdAt: DateTime.tryParse(j['createdAt'] ?? '') ?? DateTime.now(),
+      );
 }
 
 /// A single check-in record for a discipline rule.
@@ -56,6 +86,22 @@ class DisciplineCheckIn {
     required this.scoreAwarded,
     this.note,
   });
+
+  Map<String, dynamic> toJson() => {
+        'ruleId': ruleId,
+        'timestamp': timestamp.toIso8601String(),
+        'status': status,
+        'scoreAwarded': scoreAwarded,
+        'note': note,
+      };
+
+  factory DisciplineCheckIn.fromJson(Map<String, dynamic> j) => DisciplineCheckIn(
+        ruleId: j['ruleId'] ?? '',
+        timestamp: DateTime.tryParse(j['timestamp'] ?? '') ?? DateTime.now(),
+        status: j['status'] ?? 'missed',
+        scoreAwarded: (j['scoreAwarded'] as num?)?.toDouble() ?? 0,
+        note: j['note'],
+      );
 }
 
 /// Aggregate discipline analytics for a rule.

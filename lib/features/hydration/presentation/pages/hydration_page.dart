@@ -28,14 +28,14 @@ class _HydrationPageState extends State<HydrationPage> {
     final percent = (_currentMl / _goalMl).clamp(0.0, 1.0);
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.bg,
         title: Text('Hydration',
-            style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            style: AppTypography.h3(color: AppColors.textPrimary)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded,
-              color: AppColors.darkTextPrimary),
+          icon: Icon(Icons.arrow_back_ios_rounded,
+              color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -56,12 +56,12 @@ class _HydrationPageState extends State<HydrationPage> {
                   const SizedBox(height: 8),
                   Text(
                     '${_currentMl}ml',
-                    style: AppTypography.metric(color: AppColors.darkTextPrimary),
+                    style: AppTypography.metric(color: AppColors.textPrimary),
                   ),
                   Text(
                     '/ ${_goalMl}ml',
                     style: AppTypography.caption(
-                        color: AppColors.darkTextSecondary),
+                        color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -87,7 +87,7 @@ class _HydrationPageState extends State<HydrationPage> {
             // ─── Quick Add Buttons ──────────────────────
             Text('Quick Add',
                 style:
-                    AppTypography.h4(color: AppColors.darkTextPrimary))
+                    AppTypography.h4(color: AppColors.textPrimary))
                 .animate(delay: 300.ms)
                 .fadeIn(duration: 400.ms),
 
@@ -111,16 +111,16 @@ class _HydrationPageState extends State<HydrationPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(AppTheme.spacing20),
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-                border: Border.all(color: AppColors.darkCardBorder),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Today's Log",
                       style: AppTypography.h4(
-                          color: AppColors.darkTextPrimary)),
+                          color: AppColors.textPrimary)),
                   const SizedBox(height: AppTheme.spacing16),
                   _LogEntry(time: '09:00 AM', amount: '500ml', icon: Icons.water_drop_rounded),
                   _LogEntry(time: '10:30 AM', amount: '250ml', icon: Icons.coffee_rounded),
@@ -194,11 +194,11 @@ class _LogEntry extends StatelessWidget {
           const SizedBox(width: AppTheme.spacing12),
           Text(time,
               style:
-                  AppTypography.bodySmall(color: AppColors.darkTextSecondary)),
+                  AppTypography.bodySmall(color: AppColors.textSecondary)),
           const Spacer(),
           Text(amount,
               style:
-                  AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
+                  AppTypography.bodyMedium(color: AppColors.textPrimary)),
         ],
       ),
     );

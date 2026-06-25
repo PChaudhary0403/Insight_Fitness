@@ -133,7 +133,7 @@ class DisciplineScoringEngine {
       final weakest = rulesMap[sorted.last.key];
       if (strongest != null && weakest != null) {
         insights.add(DisciplineInsight(
-          message: 'You\'re highly disciplined with ${strongest.title} but weak in ${weakest.title} consistency.',
+          message: '${strongest.title}: highest consistency score. ${weakest.title}: lowest — consider schedule adjustments.',
           type: 'pattern',
           generatedAt: now,
         ));
@@ -147,7 +147,7 @@ class DisciplineScoringEngine {
     final totalMisses = allCheckIns.where((c) => c.status == 'missed').length;
     if (totalMisses > 0 && weekendMisses > totalMisses * 0.5) {
       insights.add(DisciplineInsight(
-        message: 'You miss goals mostly on weekends. Consider relaxed weekend targets.',
+        message: 'Weekend miss rate: ${(weekendMisses / totalMisses * 100).round()}% of all misses. Consider adjusting weekend targets.',
         type: 'pattern',
         generatedAt: now,
       ));
@@ -160,7 +160,7 @@ class DisciplineScoringEngine {
         final rule = rulesMap[entry.key];
         if (rule != null) {
           insights.add(DisciplineInsight(
-            message: 'Your ${rule.title} discipline improved from ${a.monthlyScore} → ${a.weeklyScore} this week!',
+            message: '${rule.title}: weekly score ${a.weeklyScore} vs monthly avg ${a.monthlyScore} — positive trend.',
             type: 'improvement',
             generatedAt: now,
           ));
@@ -175,7 +175,7 @@ class DisciplineScoringEngine {
         final rule = rulesMap[entry.key];
         if (rule != null) {
           insights.add(DisciplineInsight(
-            message: '${a.currentStreak}-day streak on ${rule.title}! You\'re building a strong habit.',
+            message: '${rule.title}: ${a.currentStreak}-day consecutive streak. Habit formation threshold reached.',
             type: 'improvement',
             generatedAt: now,
           ));
@@ -200,35 +200,35 @@ class DisciplineScoringEngine {
       if (rule == null) continue;
 
       if (a.currentStreak >= 7) {
-        badges.add(DisciplineBadge(id: '${rule.id}_7day', title: '7-Day Streak', emoji: '🔥', description: '${rule.title}: 7 consecutive days!', earnedAt: now));
+        badges.add(DisciplineBadge(id: '${rule.id}_7day', title: '7-Day Streak', emoji: '', description: '${rule.title}: 7 consecutive days completed.', earnedAt: now));
       }
       if (a.currentStreak >= 30) {
-        badges.add(DisciplineBadge(id: '${rule.id}_30day', title: 'Monthly Champion', emoji: '🏆', description: '${rule.title}: 30-day streak!', earnedAt: now));
+        badges.add(DisciplineBadge(id: '${rule.id}_30day', title: '30-Day Consistency', emoji: '', description: '${rule.title}: 30-day consecutive adherence.', earnedAt: now));
       }
       if (a.allTimeScore >= 9.5) {
-        badges.add(DisciplineBadge(id: '${rule.id}_perfect', title: 'Perfectionist', emoji: '⭐', description: '${rule.title}: Near-perfect score!', earnedAt: now));
+        badges.add(DisciplineBadge(id: '${rule.id}_perfect', title: 'Near-Perfect Score', emoji: '', description: '${rule.title}: sustained 9.5+ score.', earnedAt: now));
       }
 
-      // Category-specific badges
+      // Category-specific milestones
       if (rule.category == 'wake_up' && a.currentStreak >= 7) {
-        badges.add(DisciplineBadge(id: 'wake_warrior', title: 'Wake-Up Warrior', emoji: '🌅', description: 'Consistent early riser!', earnedAt: now));
+        badges.add(DisciplineBadge(id: 'wake_consistency', title: 'Wake-Up Consistency', emoji: '', description: '7+ day consistent wake schedule.', earnedAt: now));
       }
       if (rule.category == 'exercise' && a.allTimeScore >= 8.0) {
-        badges.add(DisciplineBadge(id: 'fitness_hero', title: 'Fitness Hero', emoji: '💪', description: 'Outstanding exercise discipline!', earnedAt: now));
+        badges.add(DisciplineBadge(id: 'exercise_adherence', title: 'Exercise Adherence', emoji: '', description: 'Sustained 8.0+ exercise discipline score.', earnedAt: now));
       }
     }
 
     return badges;
   }
 
-  /// Score descriptor text.
+  /// Score classification.
   static String scoreLabel(double score) {
-    if (score >= 9.5) return 'Perfect Discipline';
-    if (score >= 8.5) return 'Excellent';
-    if (score >= 7.0) return 'Good';
-    if (score >= 5.0) return 'Needs Improvement';
-    if (score >= 3.0) return 'Poor Adherence';
-    return 'Highly Undisciplined';
+    if (score >= 9.5) return 'Optimal';
+    if (score >= 8.5) return 'Proficient';
+    if (score >= 7.0) return 'Adequate';
+    if (score >= 5.0) return 'Developing';
+    if (score >= 3.0) return 'Below Threshold';
+    return 'Insufficient';
   }
 
   /// Score color.

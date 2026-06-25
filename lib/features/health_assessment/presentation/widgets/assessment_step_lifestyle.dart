@@ -139,23 +139,23 @@ class _AssessmentStepLifestyleState extends State<AssessmentStepLifestyle> {
 
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Text(text, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
+        child: Text(text, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
       );
 
   Widget _textField(TextEditingController ctrl, String hint, IconData icon) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkDivider),
+        border: Border.all(color: AppColors.dividerColor),
       ),
       child: TextField(
         controller: ctrl,
         onChanged: (_) => _emit(),
-        style: AppTypography.body(color: AppColors.darkTextPrimary),
+        style: AppTypography.body(color: AppColors.textPrimary),
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: Icon(icon, color: AppColors.darkTextTertiary, size: 20),
+          prefixIcon: Icon(icon, color: AppColors.textTertiary, size: 20),
           filled: false, border: InputBorder.none,
           enabledBorder: InputBorder.none, focusedBorder: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -172,12 +172,12 @@ class _AssessmentStepLifestyleState extends State<AssessmentStepLifestyle> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+          color: selected ? AppColors.primary.withValues(alpha: 0.15) : AppColors.surfaceElevated,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: selected ? AppColors.primary : AppColors.darkDivider),
+          border: Border.all(color: selected ? AppColors.primary : AppColors.dividerColor),
         ),
         child: Text('$emoji $label', style: AppTypography.bodySmall(
-          color: selected ? AppColors.primary : AppColors.darkTextSecondary,
+          color: selected ? AppColors.primary : AppColors.textSecondary,
         )),
       ),
     );
@@ -191,12 +191,12 @@ class _AssessmentStepLifestyleState extends State<AssessmentStepLifestyle> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: selected ? AppColors.movement.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+          color: selected ? AppColors.movement.withValues(alpha: 0.15) : AppColors.surfaceElevated,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: selected ? AppColors.movement : AppColors.darkDivider),
+          border: Border.all(color: selected ? AppColors.movement : AppColors.dividerColor),
         ),
         child: Text(label, style: AppTypography.bodySmall(
-          color: selected ? AppColors.movement : AppColors.darkTextSecondary,
+          color: selected ? AppColors.movement : AppColors.textSecondary,
         )),
       ),
     );
@@ -209,9 +209,9 @@ class _AssessmentStepLifestyleState extends State<AssessmentStepLifestyle> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkDivider),
+        border: Border.all(color: AppColors.dividerColor),
       ),
       child: SliderTheme(
         data: SliderThemeData(
@@ -238,17 +238,17 @@ class _AssessmentStepLifestyleState extends State<AssessmentStepLifestyle> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.darkSurfaceElevated,
+          color: AppColors.surfaceElevated,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-          border: Border.all(color: AppColors.darkDivider),
+          border: Border.all(color: AppColors.dividerColor),
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
             const SizedBox(height: 8),
-            Text(label, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+            Text(label, style: AppTypography.caption(color: AppColors.textSecondary)),
             const SizedBox(height: 4),
-            Text(current, style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+            Text(current, style: AppTypography.h4(color: AppColors.textPrimary)),
           ],
         ),
       ),

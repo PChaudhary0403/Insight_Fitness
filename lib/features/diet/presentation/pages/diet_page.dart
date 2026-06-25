@@ -41,7 +41,7 @@ class _DietPageState extends State<DietPage> {
           data.logMeal();
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('✅ ${meal.slot} logged: ${meal.description} • ${meal.calories} kcal'),
+            content: Text('${meal.slot} logged: ${meal.description} • ${meal.calories} kcal'),
             backgroundColor: AppColors.success,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -59,12 +59,12 @@ class _DietPageState extends State<DietPage> {
     final fatTarget = (calorieTarget * 0.25 / 9).round();      // 25% fat
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
-        title: Text('Diet Today', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+        backgroundColor: AppColors.bg,
+        title: Text('Diet Today', style: AppTypography.h3(color: AppColors.textPrimary)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColors.darkTextPrimary),
+          icon: Icon(Icons.arrow_back_ios_rounded, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -83,13 +83,13 @@ class _DietPageState extends State<DietPage> {
             const SizedBox(height: AppTheme.spacing24),
 
             // ─── Meal Slots ─────────────────────────────
-            _buildMealSlot('🌅', 'Breakfast', 'Start your day right', 0),
+            _buildMealSlot(Icons.wb_twilight_rounded, 'Breakfast', 'Start your day right', 0),
             const SizedBox(height: AppTheme.spacing12),
-            _buildMealSlot('☀️', 'Lunch', 'Midday fuel', 1),
+            _buildMealSlot(Icons.wb_sunny_rounded, 'Lunch', 'Midday fuel', 1),
             const SizedBox(height: AppTheme.spacing12),
-            _buildMealSlot('🌙', 'Dinner', 'Evening meal', 2),
+            _buildMealSlot(Icons.nightlight_round, 'Dinner', 'Evening meal', 2),
             const SizedBox(height: AppTheme.spacing12),
-            _buildMealSlot('🍎', 'Snack', 'Quick bite', 3),
+            _buildMealSlot(Icons.restaurant_rounded, 'Snack', 'Quick bite', 3),
           ],
         ),
       ),
@@ -103,28 +103,28 @@ class _DietPageState extends State<DietPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppTheme.spacing20),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkCardBorder),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Calories', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+          Text('Calories', style: AppTypography.caption(color: AppColors.textSecondary)),
           const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 _formatNumber(consumed),
-                style: AppTypography.metric(color: AppColors.darkTextPrimary),
+                style: AppTypography.metric(color: AppColors.textPrimary),
               ),
               const SizedBox(width: 4),
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
                   '/ ${_formatNumber(target)} kcal',
-                  style: AppTypography.bodySmall(color: AppColors.darkTextTertiary),
+                  style: AppTypography.bodySmall(color: AppColors.textTertiary),
                 ),
               ),
             ],
@@ -168,7 +168,7 @@ class _DietPageState extends State<DietPage> {
     );
   }
 
-  Widget _buildMealSlot(String emoji, String title, String hint, int delay) {
+  Widget _buildMealSlot(IconData icon, String title, String hint, int delay) {
     final logged = _isMealLogged(title);
     final meal = logged ? _meals.firstWhere((m) => m.slot == title) : null;
 
@@ -178,25 +178,25 @@ class _DietPageState extends State<DietPage> {
         width: double.infinity,
         padding: const EdgeInsets.all(AppTheme.spacing16),
         decoration: BoxDecoration(
-          color: logged ? AppColors.success.withValues(alpha: 0.05) : AppColors.darkSurface,
+          color: logged ? AppColors.success.withValues(alpha: 0.05) : AppColors.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
           border: Border.all(
-            color: logged ? AppColors.success.withValues(alpha: 0.2) : AppColors.darkCardBorder,
+            color: logged ? AppColors.success.withValues(alpha: 0.2) : AppColors.cardBorder,
           ),
         ),
         child: Row(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 28)),
+            Icon(icon, color: logged ? AppColors.success : AppColors.textSecondary, size: 28),
             const SizedBox(width: AppTheme.spacing12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
+                  Text(title, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
                   const SizedBox(height: 2),
                   Text(
                     logged ? meal!.description : 'Tap to log $hint',
-                    style: AppTypography.bodySmall(color: AppColors.darkTextSecondary),
+                    style: AppTypography.bodySmall(color: AppColors.textSecondary),
                   ),
                   if (logged) ...[
                     const SizedBox(height: 4),
@@ -204,7 +204,7 @@ class _DietPageState extends State<DietPage> {
                       children: List.generate(5, (i) => Icon(
                         i < meal!.rating ? Icons.star_rounded : Icons.star_outline_rounded,
                         size: 14,
-                        color: i < meal.rating ? AppColors.nutrition : AppColors.darkTextTertiary,
+                        color: i < meal.rating ? AppColors.nutrition : AppColors.textTertiary,
                       )),
                     ),
                   ],
@@ -212,11 +212,11 @@ class _DietPageState extends State<DietPage> {
               ),
             ),
             if (logged)
-              Text('${meal!.calories} kcal', style: AppTypography.bodySmall(color: AppColors.darkTextSecondary)),
+              Text('${meal!.calories} kcal', style: AppTypography.bodySmall(color: AppColors.textSecondary)),
             const SizedBox(width: 8),
             logged
                 ? const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 24)
-                : const Icon(Icons.add_circle_outline_rounded, color: AppColors.darkTextTertiary, size: 24),
+                : Icon(Icons.add_circle_outline_rounded, color: AppColors.textTertiary, size: 24),
           ],
         ),
       ),
@@ -288,21 +288,21 @@ class _LogMealSheetState extends State<_LogMealSheet> {
 
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: AppColors.darkSurface,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.darkDivider, borderRadius: BorderRadius.circular(2))),
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.dividerColor, borderRadius: BorderRadius.circular(2))),
             const SizedBox(height: 16),
-            Text('Log ${widget.slot}', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+            Text('Log ${widget.slot}', style: AppTypography.h3(color: AppColors.textPrimary)),
             const SizedBox(height: 20),
 
             // Quick presets
-            Text('Quick Select', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+            Text('Quick Select', style: AppTypography.caption(color: AppColors.textSecondary)),
             const SizedBox(height: 8),
             ...presets.map((p) => GestureDetector(
               onTap: () {
@@ -319,14 +319,14 @@ class _LogMealSheetState extends State<_LogMealSheet> {
                 margin: const EdgeInsets.only(bottom: 6),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
-                  color: _descController.text == p.$1 ? AppColors.primary.withValues(alpha: 0.12) : AppColors.darkSurfaceElevated,
+                  color: _descController.text == p.$1 ? AppColors.primary.withValues(alpha: 0.12) : AppColors.surfaceElevated,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: _descController.text == p.$1 ? AppColors.primary.withValues(alpha: 0.4) : Colors.transparent),
                 ),
                 child: Row(
                   children: [
-                    Expanded(child: Text(p.$1, style: AppTypography.body(color: AppColors.darkTextPrimary))),
-                    Text('${p.$2} kcal', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+                    Expanded(child: Text(p.$1, style: AppTypography.body(color: AppColors.textPrimary))),
+                    Text('${p.$2} kcal', style: AppTypography.caption(color: AppColors.textSecondary)),
                   ],
                 ),
               ),
@@ -336,12 +336,12 @@ class _LogMealSheetState extends State<_LogMealSheet> {
             // Or custom input
             TextField(
               controller: _descController,
-              style: AppTypography.body(color: AppColors.darkTextPrimary),
+              style: AppTypography.body(color: AppColors.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Or type custom meal...',
-                hintStyle: AppTypography.body(color: AppColors.darkTextTertiary),
+                hintStyle: AppTypography.body(color: AppColors.textTertiary),
                 filled: true,
-                fillColor: AppColors.darkSurfaceElevated,
+                fillColor: AppColors.surfaceElevated,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               ),
             ),
@@ -358,12 +358,12 @@ class _LogMealSheetState extends State<_LogMealSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Healthiness: ', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+                Text('Healthiness: ', style: AppTypography.caption(color: AppColors.textSecondary)),
                 ...List.generate(5, (i) => GestureDetector(
                   onTap: () => setState(() => _rating = i + 1),
                   child: Icon(
                     i < _rating ? Icons.star_rounded : Icons.star_outline_rounded,
-                    color: i < _rating ? AppColors.nutrition : AppColors.darkTextTertiary,
+                    color: i < _rating ? AppColors.nutrition : AppColors.textTertiary,
                     size: 28,
                   ),
                 )),
@@ -390,7 +390,7 @@ class _LogMealSheetState extends State<_LogMealSheet> {
                   backgroundColor: AppColors.primary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  disabledBackgroundColor: AppColors.darkSurfaceElevated,
+                  disabledBackgroundColor: AppColors.surfaceElevated,
                 ),
                 child: Text('Log ${widget.slot}', style: AppTypography.button(color: Colors.white)),
               ),
@@ -407,16 +407,16 @@ class _LogMealSheetState extends State<_LogMealSheet> {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          SizedBox(width: 60, child: Text(label, style: AppTypography.caption(color: AppColors.darkTextSecondary))),
+          SizedBox(width: 60, child: Text(label, style: AppTypography.caption(color: AppColors.textSecondary))),
           Expanded(
             child: Slider(
               value: value.toDouble(), min: min.toDouble(), max: max.toDouble(),
               activeColor: AppColors.primary,
-              inactiveColor: AppColors.darkSurfaceElevated,
+              inactiveColor: AppColors.surfaceElevated,
               onChanged: onChanged,
             ),
           ),
-          SizedBox(width: 55, child: Text('$value $unit', style: AppTypography.bodySmall(color: AppColors.darkTextPrimary), textAlign: TextAlign.right)),
+          SizedBox(width: 55, child: Text('$value $unit', style: AppTypography.bodySmall(color: AppColors.textPrimary), textAlign: TextAlign.right)),
         ],
       ),
     );
@@ -454,15 +454,15 @@ class _MacroTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing12),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-        border: Border.all(color: AppColors.darkCardBorder),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(children: [
-        Text(label, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+        Text(label, style: AppTypography.caption(color: AppColors.textSecondary)),
         const SizedBox(height: 6),
         Text(value, style: AppTypography.h4(color: color)),
-        Text(target, style: AppTypography.label(color: AppColors.darkTextTertiary)),
+        Text(target, style: AppTypography.label(color: AppColors.textTertiary)),
         const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(3),

@@ -74,12 +74,12 @@ class _AssessmentStepHabitsState extends State<AssessmentStepHabits> {
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
-                    color: selected ? AppColors.nutrition.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+                    color: selected ? AppColors.nutrition.withValues(alpha: 0.15) : AppColors.surfaceElevated,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: selected ? AppColors.nutrition : AppColors.darkDivider),
+                    border: Border.all(color: selected ? AppColors.nutrition : AppColors.dividerColor),
                   ),
                   child: Text('${e.value.$1} ${e.value.$2}', style: AppTypography.bodySmall(
-                    color: selected ? AppColors.nutrition : AppColors.darkTextSecondary,
+                    color: selected ? AppColors.nutrition : AppColors.textSecondary,
                   )),
                 ),
               );
@@ -96,9 +96,9 @@ class _AssessmentStepHabitsState extends State<AssessmentStepHabits> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.darkSurfaceElevated,
+              color: AppColors.surfaceElevated,
               borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-              border: Border.all(color: AppColors.darkDivider),
+              border: Border.all(color: AppColors.dividerColor),
             ),
             child: SliderTheme(
               data: SliderThemeData(
@@ -133,16 +133,16 @@ class _AssessmentStepHabitsState extends State<AssessmentStepHabits> {
                     margin: EdgeInsets.only(right: e.key != 'very_high' ? 8 : 0),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: selected ? color.withValues(alpha: 0.15) : AppColors.darkSurfaceElevated,
+                      color: selected ? color.withValues(alpha: 0.15) : AppColors.surfaceElevated,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: selected ? color : AppColors.darkDivider),
+                      border: Border.all(color: selected ? color : AppColors.dividerColor),
                     ),
                     child: Column(
                       children: [
                         Text(e.value.$1, style: const TextStyle(fontSize: 24)),
                         const SizedBox(height: 4),
                         Text(e.value.$2, style: AppTypography.caption(
-                          color: selected ? color : AppColors.darkTextSecondary,
+                          color: selected ? color : AppColors.textSecondary,
                         ), textAlign: TextAlign.center),
                       ],
                     ),
@@ -167,9 +167,9 @@ class _AssessmentStepHabitsState extends State<AssessmentStepHabits> {
         return Container(
           width: 28, height: 36,
           decoration: BoxDecoration(
-            color: filled ? AppColors.hydration.withValues(alpha: 0.3) : AppColors.darkSurfaceElevated,
+            color: filled ? AppColors.hydration.withValues(alpha: 0.3) : AppColors.surfaceElevated,
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: filled ? AppColors.hydration : AppColors.darkDivider),
+            border: Border.all(color: filled ? AppColors.hydration : AppColors.dividerColor),
           ),
           child: Center(
             child: Text(
@@ -184,6 +184,6 @@ class _AssessmentStepHabitsState extends State<AssessmentStepHabits> {
 
   Widget _label(String text) => Text(
         text,
-        style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary),
+        style: AppTypography.bodyMedium(color: AppColors.textPrimary),
       );
 }

@@ -69,7 +69,7 @@ class WelcomePage extends StatelessWidget {
                 Text(
                   'INSIGHT',
                   style: AppTypography.display(
-                    color: AppColors.darkTextPrimary,
+                    color: AppColors.textPrimary,
                   ).copyWith(
                     fontSize: 40,
                     letterSpacing: 8,
@@ -85,7 +85,7 @@ class WelcomePage extends StatelessWidget {
                 Text(
                   'Your Personal Health Companion',
                   style: AppTypography.bodyLarge(
-                    color: AppColors.darkTextSecondary,
+                    color: AppColors.textSecondary,
                   ),
                 )
                     .animate(delay: 700.ms)
@@ -127,7 +127,7 @@ class WelcomePage extends StatelessWidget {
                     text: TextSpan(
                       text: 'Already have an account? ',
                       style: AppTypography.body(
-                        color: AppColors.darkTextSecondary,
+                        color: AppColors.textSecondary,
                       ),
                       children: [
                         TextSpan(

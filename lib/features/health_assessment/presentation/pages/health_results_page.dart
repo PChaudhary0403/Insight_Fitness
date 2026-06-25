@@ -18,7 +18,7 @@ class HealthResultsPage extends StatelessWidget {
     final scoreColors = AppColors.healthScoreGradient(score);
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 40),
@@ -26,9 +26,9 @@ class HealthResultsPage extends StatelessWidget {
             children: [
               const SizedBox(height: AppTheme.spacing24),
               // ─── Title ─────────────────────────────────
-              Text('Your Health Analysis', style: AppTypography.h2(color: AppColors.darkTextPrimary))
+              Text('Your Health Analysis', style: AppTypography.h2(color: AppColors.textPrimary))
                   .animate().fadeIn(duration: 500.ms),
-              Text('Powered by INSIGHT Engine', style: AppTypography.caption(color: AppColors.darkTextTertiary))
+              Text('Powered by INSIGHT Engine', style: AppTypography.caption(color: AppColors.textTertiary))
                   .animate(delay: 200.ms).fadeIn(),
               const SizedBox(height: AppTheme.spacing24),
 
@@ -91,7 +91,7 @@ class HealthResultsPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('$score', style: AppTypography.score(color: colors[0])),
-          Text('/100', style: AppTypography.caption(color: AppColors.darkTextTertiary)),
+          Text('/100', style: AppTypography.caption(color: AppColors.textTertiary)),
           const SizedBox(height: 2),
           Text(AppColors.healthScoreLabel(score), style: AppTypography.bodyMedium(color: colors[0])),
         ],
@@ -117,7 +117,7 @@ class HealthResultsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Health Metrics', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+          Text('Health Metrics', style: AppTypography.h4(color: AppColors.textPrimary)),
           const SizedBox(height: 12),
           ...metrics.asMap().entries.map((e) {
             final m = e.value;
@@ -125,18 +125,18 @@ class HealthResultsPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.darkCardBorder),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: Row(
                 children: [
                   Container(width: 4, height: 40, decoration: BoxDecoration(color: m.$4, borderRadius: BorderRadius.circular(2))),
                   const SizedBox(width: 14),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(m.$1, style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+                    Text(m.$1, style: AppTypography.caption(color: AppColors.textSecondary)),
                     const SizedBox(height: 2),
-                    Text(m.$2, style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+                    Text(m.$2, style: AppTypography.h4(color: AppColors.textPrimary)),
                   ])),
                   if (m.$3.isNotEmpty)
                     Container(
@@ -174,7 +174,7 @@ class HealthResultsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Health Flags', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+          Text('Health Flags', style: AppTypography.h4(color: AppColors.textPrimary)),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8, runSpacing: 8,
@@ -203,9 +203,9 @@ class HealthResultsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Your Improvement Roadmap', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+          Text('Your Improvement Roadmap', style: AppTypography.h4(color: AppColors.textPrimary)),
           const SizedBox(height: 4),
-          Text('Personalized plan based on your assessment', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+          Text('Personalized plan based on your assessment', style: AppTypography.caption(color: AppColors.textSecondary)),
           const SizedBox(height: 16),
           ...profile.roadmap.asMap().entries.map((e) {
             final item = e.value;
@@ -214,9 +214,9 @@ class HealthResultsPage extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.darkCardBorder),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,7 +225,7 @@ class HealthResultsPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: [
-                      Expanded(child: Text(item.title, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary))),
+                      Expanded(child: Text(item.title, style: AppTypography.bodyMedium(color: AppColors.textPrimary))),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(color: priorityColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
@@ -233,7 +233,7 @@ class HealthResultsPage extends StatelessWidget {
                       ),
                     ]),
                     const SizedBox(height: 6),
-                    Text(item.description, style: AppTypography.bodySmall(color: AppColors.darkTextSecondary)),
+                    Text(item.description, style: AppTypography.bodySmall(color: AppColors.textSecondary)),
                   ])),
                 ],
               ),

@@ -1,71 +1,84 @@
 import 'package:flutter/material.dart';
+import '../../shared/services/theme_service.dart';
 
 /// INSIGHT Design System — Color Palette
-/// Clean, futuristic, health-tech color system with dynamic health score colors.
+/// Professional, data-driven analytics platform color system.
 class AppColors {
   AppColors._();
 
-  // ─── Brand Colors ───────────────────────────────────────
-  static const Color primary = Color(0xFF00C9A7);
-  static const Color primaryLight = Color(0xFF00E5BF);
-  static const Color primaryDark = Color(0xFF00A88A);
-  static const Color secondary = Color(0xFF845EF7);
-  static const Color secondaryLight = Color(0xFF9775FA);
-  static const Color accent = Color(0xFF3B82F6);
+  static bool get _isDark => ThemeService.instance.isDark;
+
+  // ─── Theme-Adaptive Getters ─────────────────────────────
+  static Color get bg => _isDark ? darkBackground : lightBackground;
+  static Color get surface => _isDark ? darkSurface : lightSurface;
+  static Color get surfaceElevated => _isDark ? darkSurfaceElevated : lightSurfaceElevated;
+  static Color get textPrimary => _isDark ? darkTextPrimary : lightTextPrimary;
+  static Color get textSecondary => _isDark ? darkTextSecondary : lightTextSecondary;
+  static Color get textTertiary => _isDark ? darkTextTertiary : lightTextTertiary;
+  static Color get dividerColor => _isDark ? darkDivider : lightDivider;
+  static Color get cardBorder => _isDark ? darkCardBorder : lightCardBorder;
+
+  // ─── Brand Colors (Professional, muted) ─────────────────
+  static const Color primary = Color(0xFF4A90A4);      // Muted teal — trustworthy
+  static const Color primaryLight = Color(0xFF5BA3B8);
+  static const Color primaryDark = Color(0xFF3A7A8E);
+  static const Color secondary = Color(0xFF6B7B8D);    // Slate — professional
+  static const Color secondaryLight = Color(0xFF7D8D9F);
+  static const Color accent = Color(0xFF4B6584);        // Navy-slate accent
 
   // ─── Light Mode ─────────────────────────────────────────
-  static const Color lightBackground = Color(0xFFF8F9FA);
+  static const Color lightBackground = Color(0xFFF7F8FA);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightSurfaceElevated = Color(0xFFFFFFFF);
-  static const Color lightTextPrimary = Color(0xFF1A1A2E);
-  static const Color lightTextSecondary = Color(0xFF6B7280);
-  static const Color lightTextTertiary = Color(0xFF9CA3AF);
-  static const Color lightDivider = Color(0xFFE5E7EB);
-  static const Color lightCardBorder = Color(0xFFF0F0F5);
+  static const Color lightTextPrimary = Color(0xFF1B2631);
+  static const Color lightTextSecondary = Color(0xFF5D6D7E);
+  static const Color lightTextTertiary = Color(0xFF95A5A6);
+  static const Color lightDivider = Color(0xFFE8ECF0);
+  static const Color lightCardBorder = Color(0xFFEBEEF2);
 
-  // ─── Dark Mode ──────────────────────────────────────────
-  static const Color darkBackground = Color(0xFF0D1117);
-  static const Color darkSurface = Color(0xFF161B22);
-  static const Color darkSurfaceElevated = Color(0xFF21262D);
-  static const Color darkTextPrimary = Color(0xFFF0F6FC);
+  // ─── Dark Mode (Charcoal / Dark Slate) ──────────────────
+  static const Color darkBackground = Color(0xFF0F1419);
+  static const Color darkSurface = Color(0xFF1A1F27);
+  static const Color darkSurfaceElevated = Color(0xFF242B35);
+  static const Color darkTextPrimary = Color(0xFFE8ECF0);
   static const Color darkTextSecondary = Color(0xFF8B949E);
-  static const Color darkTextTertiary = Color(0xFF6E7681);
-  static const Color darkDivider = Color(0xFF30363D);
-  static const Color darkCardBorder = Color(0xFF21262D);
+  static const Color darkTextTertiary = Color(0xFF6B7685);
+  static const Color darkDivider = Color(0xFF2D3540);
+  static const Color darkCardBorder = Color(0xFF242B35);
 
-  // ─── Semantic Colors ────────────────────────────────────
-  static const Color success = Color(0xFF22C55E);
-  static const Color successDark = Color(0xFF3FB950);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color warningDark = Color(0xFFD29922);
-  static const Color error = Color(0xFFEF4444);
-  static const Color errorDark = Color(0xFFF85149);
-  static const Color info = Color(0xFF3B82F6);
-  static const Color infoDark = Color(0xFF58A6FF);
+  // ─── Semantic Colors (Muted, professional) ──────────────
+  static const Color success = Color(0xFF27AE60);
+  static const Color successDark = Color(0xFF2ECC71);
+  static const Color warning = Color(0xFFD4A017);
+  static const Color warningDark = Color(0xFFC79B1B);
+  static const Color error = Color(0xFFC0392B);
+  static const Color errorDark = Color(0xFFE74C3C);
+  static const Color info = Color(0xFF2C7BE5);
+  static const Color infoDark = Color(0xFF4A9BF5);
 
-  // ─── Health Score Dynamic Colors (Color Psychology) ─────
-  static const Color scoreDangerStart = Color(0xFFC0392B);
-  static const Color scoreDangerEnd = Color(0xFFE74C3C);
-  static const Color scoreWarningStart = Color(0xFFE74C3C);
-  static const Color scoreWarningEnd = Color(0xFFF39C12);
-  static const Color scoreCautionStart = Color(0xFFF39C12);
-  static const Color scoreCautionEnd = Color(0xFFF1C40F);
-  static const Color scoreImprovingStart = Color(0xFFF1C40F);
-  static const Color scoreImprovingEnd = Color(0xFF2ECC71);
-  static const Color scoreGoodStart = Color(0xFF27AE60);
-  static const Color scoreGoodEnd = Color(0xFF2ECC71);
-  static const Color scoreExcellentStart = Color(0xFF1ABC9C);
-  static const Color scoreExcellentEnd = Color(0xFF00C9A7);
+  // ─── Score Colors (Subdued, analytical) ─────────────────
+  static const Color scoreDangerStart = Color(0xFF922B21);
+  static const Color scoreDangerEnd = Color(0xFFC0392B);
+  static const Color scoreWarningStart = Color(0xFFC0392B);
+  static const Color scoreWarningEnd = Color(0xFFD4A017);
+  static const Color scoreCautionStart = Color(0xFFD4A017);
+  static const Color scoreCautionEnd = Color(0xFFD4B83B);
+  static const Color scoreImprovingStart = Color(0xFFD4B83B);
+  static const Color scoreImprovingEnd = Color(0xFF27AE60);
+  static const Color scoreGoodStart = Color(0xFF1E8449);
+  static const Color scoreGoodEnd = Color(0xFF27AE60);
+  static const Color scoreExcellentStart = Color(0xFF148F77);
+  static const Color scoreExcellentEnd = Color(0xFF4A90A4);
 
-  // ─── Category Colors ────────────────────────────────────
-  static const Color hydration = Color(0xFF3B82F6);
-  static const Color nutrition = Color(0xFFF59E0B);
-  static const Color movement = Color(0xFF22C55E);
-  static const Color exercise = Color(0xFFEF4444);
-  static const Color sleep = Color(0xFF845EF7);
-  static const Color mindfulness = Color(0xFF06B6D4);
+  // ─── Category Colors (Muted, consistent) ────────────────
+  static const Color hydration = Color(0xFF2C7BE5);
+  static const Color nutrition = Color(0xFFD4A017);
+  static const Color movement = Color(0xFF27AE60);
+  static const Color exercise = Color(0xFFC0392B);
+  static const Color sleep = Color(0xFF6C63AC);
+  static const Color mindfulness = Color(0xFF4A90A4);
 
-  // ─── Gradient Presets ───────────────────────────────────
+  // ─── Gradient Presets (Subtle, professional) ─────────────
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primary, primaryLight],
     begin: Alignment.topLeft,
@@ -79,29 +92,22 @@ class AppColors {
   );
 
   static const LinearGradient darkCardGradient = LinearGradient(
-    colors: [Color(0xFF1A1F2E), Color(0xFF16192A)],
+    colors: [Color(0xFF1A1F27), Color(0xFF151A22)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
-  /// Returns the gradient colors based on the health score (0-100).
+  /// Returns gradient colors based on score (0-100).
   static List<Color> healthScoreGradient(int score) {
-    if (score <= 20) {
-      return [scoreDangerStart, scoreDangerEnd];
-    } else if (score <= 35) {
-      return [scoreWarningStart, scoreWarningEnd];
-    } else if (score <= 50) {
-      return [scoreCautionStart, scoreCautionEnd];
-    } else if (score <= 65) {
-      return [scoreImprovingStart, scoreImprovingEnd];
-    } else if (score <= 80) {
-      return [scoreGoodStart, scoreGoodEnd];
-    } else {
-      return [scoreExcellentStart, scoreExcellentEnd];
-    }
+    if (score <= 20) return [scoreDangerStart, scoreDangerEnd];
+    if (score <= 35) return [scoreWarningStart, scoreWarningEnd];
+    if (score <= 50) return [scoreCautionStart, scoreCautionEnd];
+    if (score <= 65) return [scoreImprovingStart, scoreImprovingEnd];
+    if (score <= 80) return [scoreGoodStart, scoreGoodEnd];
+    return [scoreExcellentStart, scoreExcellentEnd];
   }
 
-  /// Returns a single representative color for a health score.
+  /// Returns a single color for a score.
   static Color healthScoreColor(int score) {
     if (score <= 20) return scoreDangerStart;
     if (score <= 35) return scoreWarningStart;
@@ -111,13 +117,13 @@ class AppColors {
     return scoreExcellentStart;
   }
 
-  /// Returns the label for a health score.
+  /// Returns analytical label for a score.
   static String healthScoreLabel(int score) {
-    if (score <= 20) return 'Poor';
-    if (score <= 35) return 'Needs Work';
+    if (score <= 20) return 'Critical';
+    if (score <= 35) return 'Below Average';
     if (score <= 50) return 'Average';
-    if (score <= 65) return 'Good';
-    if (score <= 80) return 'Very Good';
-    return 'Excellent';
+    if (score <= 65) return 'Above Average';
+    if (score <= 80) return 'Good';
+    return 'Optimal';
   }
 }

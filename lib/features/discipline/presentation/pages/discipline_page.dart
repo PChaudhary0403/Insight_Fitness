@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../data/models/discipline_models.dart';
@@ -18,10 +20,12 @@ class DisciplinePage extends StatefulWidget {
 class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // ─── Real Data (starts empty, user creates disciplines) ───
-  final List<DisciplineRule> _rules = [];
+  static const _rulesKey = 'discipline_rules_v2';
+  static const _checkInsKey = 'discipline_checkins_v2';
 
-  late final List<DisciplineCheckIn> _checkIns;
+  // ─── Real Data (persisted) ────────────────────────────────
+  List<DisciplineRule> _rules = [];
+  List<DisciplineCheckIn> _checkIns = [];
   late Map<String, DisciplineAnalytics> _analytics;
   late List<DisciplineInsight> _insights;
   late List<DisciplineBadge> _badges;
@@ -30,8 +34,36 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _checkIns = []; // No fake history — start clean
+    _analytics = {};
+    _insights = [];
+    _badges = [];
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rulesJson = prefs.getString(_rulesKey);
+    if (rulesJson != null) {
+      try {
+        final list = jsonDecode(rulesJson) as List;
+        _rules = list.map((e) => DisciplineRule.fromJson(e as Map<String, dynamic>)).toList();
+      } catch (_) {}
+    }
+    final checkInsJson = prefs.getString(_checkInsKey);
+    if (checkInsJson != null) {
+      try {
+        final list = jsonDecode(checkInsJson) as List;
+        _checkIns = list.map((e) => DisciplineCheckIn.fromJson(e as Map<String, dynamic>)).toList();
+      } catch (_) {}
+    }
     _recompute();
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_rulesKey, jsonEncode(_rules.map((r) => r.toJson()).toList()));
+    await prefs.setString(_checkInsKey, jsonEncode(_checkIns.map((c) => c.toJson()).toList()));
   }
 
   void _recompute() {
@@ -53,11 +85,12 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
       _checkIns.add(DisciplineCheckIn(ruleId: rule.id, timestamp: now, status: status, scoreAwarded: score));
       _recompute();
     });
+    _saveData();
 
     // Show feedback
-    final emoji = status == 'on_time' ? '✅' : '⏰';
+    final label = status == 'on_time' ? 'On Time' : 'Late';
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('$emoji ${rule.title}: ${score.toStringAsFixed(1)}/10 ($status)'),
+      content: Text('${rule.title}: ${score.toStringAsFixed(1)}/10 ($label)'),
       backgroundColor: status == 'on_time' ? AppColors.success : AppColors.warning,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -66,6 +99,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
 
   void _addDiscipline(DisciplineRule rule) {
     setState(() { _rules.add(rule); _recompute(); });
+    _saveData();
   }
 
   @override
@@ -82,7 +116,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.bg,
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(
           context: context, isScrollControlled: true,
@@ -130,8 +164,8 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
             onTap: () => Navigator.of(context).pop(),
             child: Container(
               width: 40, height: 40,
-              decoration: BoxDecoration(color: AppColors.darkSurfaceElevated, borderRadius: BorderRadius.circular(12)),
-              child: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.darkTextPrimary, size: 18),
+              decoration: BoxDecoration(color: AppColors.surfaceElevated, borderRadius: BorderRadius.circular(12)),
+              child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textPrimary, size: 18),
             ),
           ),
           const SizedBox(width: 16),
@@ -139,7 +173,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Discipline Tracker', style: AppTypography.h3(color: AppColors.darkTextPrimary)),
+                Text('Discipline Tracker', style: AppTypography.h3(color: AppColors.textPrimary)),
                 Text('${DisciplineScoringEngine.scoreLabel(score)} • ${score.toStringAsFixed(1)}/10', style: AppTypography.caption(color: color)),
               ],
             ),
@@ -161,7 +195,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceElevated,
+        color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(12),
       ),
       child: TabBar(
@@ -169,7 +203,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
         indicator: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(10)),
         indicatorSize: TabBarIndicatorSize.tab,
         labelColor: AppColors.primary,
-        unselectedLabelColor: AppColors.darkTextTertiary,
+        unselectedLabelColor: AppColors.textTertiary,
         labelStyle: AppTypography.buttonSmall(),
         dividerColor: Colors.transparent,
         tabs: const [
@@ -190,11 +224,11 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🛡️', style: TextStyle(fontSize: 64)),
+            Icon(Icons.shield_rounded, color: AppColors.textSecondary, size: 48),
             const SizedBox(height: 16),
-            Text('No disciplines yet', style: AppTypography.h4(color: AppColors.darkTextSecondary)),
+            Text('No disciplines yet', style: AppTypography.h4(color: AppColors.textSecondary)),
             const SizedBox(height: 4),
-            Text('Tap + to create your first commitment', style: AppTypography.bodySmall(color: AppColors.darkTextTertiary)),
+            Text('Tap + to create your first commitment', style: AppTypography.bodySmall(color: AppColors.textTertiary)),
           ],
         ),
       );
@@ -215,9 +249,9 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.darkSurface,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: todayChecked ? rule.color.withValues(alpha: 0.4) : AppColors.darkCardBorder),
+            border: Border.all(color: todayChecked ? rule.color.withValues(alpha: 0.4) : AppColors.cardBorder),
           ),
           child: Row(
             children: [
@@ -234,11 +268,11 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(rule.title, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary)),
+                    Text(rule.title, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
                     const SizedBox(height: 2),
                     Text(
-                      '${rule.targetTimeStart} - ${rule.targetTimeEnd} • ${rule.recurrence} • ${analytics?.currentStreak ?? 0}🔥',
-                      style: AppTypography.caption(color: AppColors.darkTextSecondary),
+                      '${rule.targetTimeStart} - ${rule.targetTimeEnd} • ${rule.recurrence} • ${analytics?.currentStreak ?? 0} day streak',
+                      style: AppTypography.caption(color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 6),
                     // Score bar
@@ -311,10 +345,10 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
             ),
             child: Column(
               children: [
-                Text('Weekly Discipline Score', style: AppTypography.caption(color: AppColors.darkTextSecondary)),
+                Text('Weekly Discipline Score', style: AppTypography.caption(color: AppColors.textSecondary)),
                 const SizedBox(height: 12),
                 Text(_overallScore.toStringAsFixed(1), style: AppTypography.score(color: DisciplineScoringEngine.scoreColor(_overallScore))),
-                Text('/ 10.0', style: AppTypography.caption(color: AppColors.darkTextTertiary)),
+                Text('/ 10.0', style: AppTypography.caption(color: AppColors.textTertiary)),
                 const SizedBox(height: 8),
                 Text(DisciplineScoringEngine.scoreLabel(_overallScore), style: AppTypography.bodyMedium(color: DisciplineScoringEngine.scoreColor(_overallScore))),
               ],
@@ -322,7 +356,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
           ).animate().fadeIn(duration: 500.ms).scale(begin: const Offset(0.95, 0.95)),
           const SizedBox(height: 20),
 
-          Text('Per-Discipline Breakdown', style: AppTypography.h4(color: AppColors.darkTextPrimary)),
+          Text('Per-Discipline Breakdown', style: AppTypography.h4(color: AppColors.textPrimary)),
           const SizedBox(height: 12),
           ..._rules.asMap().entries.map((e) {
             final rule = e.value;
@@ -331,9 +365,9 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.darkCardBorder),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,8 +375,8 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
                   Row(children: [
                     Icon(rule.icon, color: rule.color, size: 18),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(rule.title, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary))),
-                    Text('${a.currentStreak}🔥', style: AppTypography.bodySmall(color: AppColors.darkTextSecondary)),
+                    Expanded(child: Text(rule.title, style: AppTypography.bodyMedium(color: AppColors.textPrimary))),
+                    Text('${a.currentStreak} day streak', style: AppTypography.bodySmall(color: AppColors.textSecondary)),
                   ]),
                   const SizedBox(height: 12),
                   Row(
@@ -366,8 +400,8 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
     return Expanded(
       child: Column(
         children: [
-          Text(value.toStringAsFixed(1), style: AppTypography.h4(color: value >= 7 ? color : AppColors.darkTextSecondary)),
-          Text(label, style: AppTypography.caption(color: AppColors.darkTextTertiary)),
+          Text(value.toStringAsFixed(1), style: AppTypography.h4(color: value >= 7 ? color : AppColors.textSecondary)),
+          Text(label, style: AppTypography.caption(color: AppColors.textTertiary)),
         ],
       ),
     );
@@ -381,10 +415,10 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🏅', style: TextStyle(fontSize: 64)),
+            Icon(Icons.emoji_events_rounded, color: AppColors.textSecondary, size: 48),
             const SizedBox(height: 16),
-            Text('No badges yet', style: AppTypography.h4(color: AppColors.darkTextSecondary)),
-            Text('Keep building streaks to earn badges!', style: AppTypography.bodySmall(color: AppColors.darkTextTertiary)),
+            Text('No milestones earned', style: AppTypography.h4(color: AppColors.textSecondary)),
+            Text('Maintain streaks to unlock milestones', style: AppTypography.bodySmall(color: AppColors.textTertiary)),
           ],
         ),
       );
@@ -411,11 +445,11 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(badge.emoji, style: const TextStyle(fontSize: 36)),
+              Icon(Icons.emoji_events_rounded, color: AppColors.secondary, size: 36),
               const SizedBox(height: 8),
-              Text(badge.title, style: AppTypography.bodyMedium(color: AppColors.darkTextPrimary), textAlign: TextAlign.center),
+              Text(badge.title, style: AppTypography.bodyMedium(color: AppColors.textPrimary), textAlign: TextAlign.center),
               const SizedBox(height: 4),
-              Text(badge.description, style: AppTypography.caption(color: AppColors.darkTextSecondary), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+              Text(badge.description, style: AppTypography.caption(color: AppColors.textSecondary), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
             ],
           ),
         ).animate(delay: (i * 100).ms).fadeIn().scale(begin: const Offset(0.9, 0.9));
@@ -431,10 +465,10 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🤖', style: TextStyle(fontSize: 64)),
+            Icon(Icons.analytics_rounded, color: AppColors.textSecondary, size: 48),
             const SizedBox(height: 16),
-            Text('Collecting data...', style: AppTypography.h4(color: AppColors.darkTextSecondary)),
-            Text('AI insights will appear as patterns emerge', style: AppTypography.bodySmall(color: AppColors.darkTextTertiary)),
+            Text('Collecting data...', style: AppTypography.h4(color: AppColors.textSecondary)),
+            Text('AI insights will appear as patterns emerge', style: AppTypography.bodySmall(color: AppColors.textTertiary)),
           ],
         ),
       );
@@ -476,7 +510,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.darkSurface,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
@@ -494,7 +528,7 @@ class _DisciplinePageState extends State<DisciplinePage> with SingleTickerProvid
                 children: [
                   Text(insight.type.toUpperCase(), style: AppTypography.caption(color: color)),
                   const SizedBox(height: 4),
-                  Text(insight.message, style: AppTypography.body(color: AppColors.darkTextPrimary)),
+                  Text(insight.message, style: AppTypography.body(color: AppColors.textPrimary)),
                 ],
               )),
             ],
